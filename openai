@@ -1,1 +1,226 @@
+---pydantic class matter alot kunke agr m chah rhi hu email address or pura context bhi data class or pydantic class se bna skty hn
+---async programming se ham parallel processing krwa skty hn its mean ky ek sth 5 6 ya 50 functions bhi ham chla skty hn async.gather ky funtion 
+se kunke yh library bht important h usy ham bht sary functions ek sth chla skty hn
+---In AI, Markdown is a lightweight markup language that uses plain text formatting to structure data for both human and machine readability.
+---Dynamic instruction in AI refers to giving AI systems flexible rules that change in real-time based on context, user input, or other variables,
+rather than following a single, fixed instruction.
+---Context management in AI is the process of supplying an AI agent with the relevant data it needs to perform a task, while strategically managing the limited space of 
+its "context window" to prevent performance issues.
+---error handling: input or output guardrils ki trf jarha h , tool ya function fail hogya us condition m kya hoga
+---Pydantic models in AI are used to provide structure, validation, and type safety to the outputs of large language models (LLMs). Pydantic AI is a framework that leverages
+Pydantic's data validation to turn messy, unstructured LLM responses into structured, reliable data for use in applications.
+This approach simplifies building complex AI agents by allowing them to interact with domain-specific data, call external tools, and produce consistent, validated outputs. 
+---Chain of of thought (CoT) prompting is a technique that enhances large language models' reasoning abilities by instructing them to break down complex problems into smaller, sequential steps
+before providing a final answer.(reasoning krrha hoga hr step per kunke kisi model m reasoning ni hoti to us m COT kaam ata h jis m ham steps m kaam break down krty hn ky isko asy kro phr asy 
+kro is trh
+---markdown: square bracket m text likhty hn round bracket m link likhty hn yh hyperlink lgany ka tareeka h, The basic syntax to add an image in 
+Markdown is: `![Alt text](image_url)`. For local images, use a local path or relative path.
+---llm se bt krny ky tareekay ko kehty hn prompt engineering
+--prompt kehty hn sawal krny ko or engineering of prompt mtlb ky prompt kese design kryn ky acha output mily, prompt likthy hn ham or us m changes krty rhty hn iteration perform krty rhty hn
+jb tk ky desire output na mily to is engineering or changes krny ko prompt engineering kehty hn.
+---GPT-4.1 prompting guide cookbook: context jo h one million token jo h wo ek query m process hoskta h . tool calling ko bht improve krdia h ky jb tool ko cl krty thy to jo kehty thy ky 
+email send kro to wo attendance send krdeta tha to wo function ghlti se cl krdeta tha to ab problem yh h ky tool calling ka jo phly schema bnaty thy uske andr kch guidelines inho ne di ky agr
+is guideline ko istemal krtyhuy ky ham jese do chizain krty haina ky tool ko kb istemal krna h yh system prompt m btadety hn  or tool kya kya kaam krta h usko kese istemal krskty hn uski kya 
+exampels hn wo sari chizainham tool schema m btadety hn unho ne yh chez differentiate krdia ky example kb use krna h kya kya example per wo istemal hoskta h usky input output kya hongy wo
+tool schema m btado or isi trhkb cl krna h kis sequence se cl krna h cl krny se phly kya krna h wo apky system prompt m h yh do batain inho ne btai, persistence mtlb jo conversation ham krrhy
+hn jb tk koi task complete ni hota to wo persistence rhy yh memory ky andr apny loop ky andr wo yd rkhny ki koshish krta h to inho ne persistence bnany ki bhi koshish ki with the help of
+prompt engineering. or COT ki badolat jo reasoning ki power h ky konsi chez kb istemal krni h isko bhi explain krny ki koshish ki h enhance krny ki koshish ki h.
+---purany waly llm 1 million token ko process ni krty thy but gpt-4.1 waly llm m long context h yh 1 million ko proces krskty hn, coding or instruction following ko bhi improve kia h is m.
 
+---AGENTIC WORKFLOW:GPT-4.1 is a great place to build agentic workflows.(mtlb ham jitny bhi agentic workflow ki chizain istemal krrhy hn jese openai agent ya kkoi bhi third party framework 
+bnany jese langgraph un sbko agr backend per yh gpt4.1 wala llm dedain to yh sbse best h)
+An agentic workflow is a process where AI agents execute a complex task autonomously, making decisions and taking actions with minimal human intervention. Unlike traditional
+automation that follows fixed rules, these workflows use AI agents that can reason, adapt to real-time changes, and collaborate with humans to achieve goals more efficiently. 
+-------SWE-bench verified:koi bhi repository ky issue, bug ya request ko automatically manage krna."SWE-bench Verified" means a set of real-world software engineering problems, 
+sourced from actual GitHub issues, that have been human-validated to be solvable. It is a benchmark used to test and evaluate the capabilities of AI coding agents, particularly 
+their ability to understand code, apply fixes, and autonomously validate their solutions in a single attempt, with no hints or scaffolding. 
+
+
+---SYSTEM PROMPT REMINDERS:This explains three key system prompt reminders that improve GPT-4.1’s performance in agentic workflows (like coding or multi-step reasoning).
+
+1. Persistence:(iteration m kam krrhy hn ky koi tool to cl ni krna ya kisi or agent se to help ni leni is trh different loops m kam krke user ky task ko complpete krengy )
+Tell the model to keep working until the task is fully solved before returning control, ensuring it doesn’t stop too early.(jo bhi chizain horhi hn workflow m usy yad rkho tool calling,
+function call kia handsoff kia or koi bhi chez istemal krrhy hn usy yad rkhega)
+example:You are an agent - please keep going until the user’s query is completely resolved, before ending your turn and yielding back to the user.
+Only terminate your turn when you are sure that the problem is solved.(is m please keep going wali line ka mtlb ky jo krrhy usy yd rkho or tbhi terminate krna tb problem solve ho .)
+
+2. Tool-calling:
+Instruct the model to use tools (like file reading or code inspection) when unsure, instead of guessing answers.(right time per right tool call krna
+example:If you are not sure about file content or codebase structure pertaining to the user’s request, use your tools to read files and gather the relevant 
+information: do NOT guess or make up an answer.(is trh wo khudse khud guess ni krega simple kehdia agr yh ni ata to simple toolcl krke file read krke information dedo
+is trh wrong way m ni jyga hallucination ni krega)
+
+3. Planning (optional):(planning ka mtlb chain of thoughts ky koi sawal kia to phly usko smjhengy phr apni knowledge se match krengy phr kch missing h to tool cl krengy us tool
+ka purany information per kya asar hoga kese relate krega phr roadmap bnakr jawab dengy jo ky user ki need h ek perfect answer)
+(reasoning to kch llm hoty hn but ab usy ek path dedngy to zyada bhtr hoga to uske liye COT ya planning zrori h lekin yh gpt4.1 non-reasoning h)
+Ask the model to plan and reflect before and after tool calls, promoting thoughtful, step-by-step reasoning instead of blindly executing tasks.
+example:You MUST plan extensively before each function call, and reflect extensively on the outcomes of the previous function calls. DO NOT do this entire process by making function calls only,
+as this can impair your ability to solve the problem and think insightfully.
+
+These three reminders help shift GPT-4.1 from a chatbot mode to a more independent, problem-solving agent, improving performance (by about 20% in internal tests).
+This means GPT-4.1 performs much better when given clear system prompts that include the three reminders: persistence, tool-calling, and planning.
+In the agentic setting (where the model acts like an autonomous problem-solver instead of a passive chatbot), GPT-4.1 follows both user instructions and system rules very carefully.
+By adding those three reminders:
+It keeps working until the problem is solved (persistence),
+Uses tools correctly instead of guessing (tool-calling), and
+Thinks and plans each step carefully (planning).
+Doing this improved their internal benchmark performance (SWE-bench Verified) by about 20%, proving that these instructions make GPT-4.1 behave more like an independent, proactive 
+agent rather than just responding to messages like a chatbot.(55% m se 20% inho ne srf tbhi achieve krlia jb yh teen chizain ki)
+(planning ki ky kese solve hoga yh task yh tool cl krna phr uske bd yh tool cl krna or dusry ka phly per kyaa impact parhega yh bhi dekhna is trh acha prompt hota h in teen chizon se)
+
+----------TOOL CALLS-----------
+Developers must use the API’s tools field (the built-in method) instead of adding tool info manually into the prompt.(normally ham function bnaty thy or decorater lgadety thy or function
+ki sari detail ham system prompt m likhrhy hoty thy to isko imporve krke ab jo hamary pas tool description ki field hoti h tool field hoti h usy tools pass krty hn instead of adding
+details in system prompt jb tool description m detail add ki to SWE-bench verified 2% increased hua
+GPT-4.1 has improved training for handling tools automatically.
+Older versions weren’t as good at understanding how to call tools or interpret tool responses.
+🔹 “We encourage developers to exclusively use the tools field… rather than manually injecting tool descriptions…”
+➡ When using the OpenAI API, there’s a proper place called the tools field where you define all available tools.
+Some developers used to paste tool details (like name, purpose, and parameters) directly into the system prompt — that’s no longer recommended.
+You should let the API handle tool definitions automatically.
+🔹 “Developers should name tools clearly to indicate their purpose…”
+➡ Always give tools clear names that describe what they do.
+Example:
+❌ Bad name: tool1
+✅ Good name: search_web or generate_chart
+🔹 “Similarly, for each tool param, lean on good naming and descriptions…”
+➡ For every parameter (input) your tool accepts, give it:
+A meaningful name (e.g., query, file_path)
+A short explanation (e.g., “The keyword to search for on the web”)
+This ensures GPT-4.1 uses the parameters correctly.
+🔹 “If your tool is particularly complicated… create an # Examples section in your system prompt…”
+➡ If the tool is complex, instead of stuffing long examples into the description, create a separate Examples section in your system prompt.
+This helps GPT-4.1 understand how and when to call the tool — without cluttering the description.
+🔹 “You can use ‘Generate Anything’ in the Prompt Playground…”
+➡ In the OpenAI Prompt Playground, there’s a “Generate Anything” feature that can help you auto-generate example tool definitions — a quick way to start writing clean tool setups.
+🔹 “Providing examples can be helpful to indicate when to use tools…”
+➡ Example usage helps GPT-4.1 know:
+When it should use a tool
+Whether it needs to include user input in the call
+Which parameters are suitable for different cases
+🔹 “Add a clear, detailed description in the ‘description’ field of the tool.”
+➡ Each tool has a description field. Write a short, precise explanation of what the tool does so GPT-4.1 knows when and how to use it.
+🔹 “This is the best way to minimize errors and ensure the model remains in distribution…”
+➡ Using the correct method (the tools field) helps:
+Avoid errors (since the model reads tools in the expected format)
+Keep the model “in distribution”, meaning it behaves the way it was trained — not confused by custom or unusual prompt structures.
+🔹 “We observed a 2% increase in SWE-bench Verified pass rate…”
+➡ When they tested both methods, using API-defined tools made GPT-4.1 perform 2% better on a programming benchmark called SWE-bench Verified, which measures accuracy on coding tasks.
+✅ In summary:
+Define tools properly using the API’s tools field, not in your prompt.
+Give each tool clear names, concise descriptions, and well-labeled parameters.
+If tools are complex, add an # Examples section for clarity.
+This makes GPT-4.1 use tools more accurately, safely, and effectively.
+
+
+🔹 “Prompting-Induced Planning & Chain-of-Thought”
+This title means that a developer can cause GPT-4.1 to plan and think step-by-step just through prompting — by writing special instructions in the prompt.
+“Chain-of-thought” refers to the model’s reasoning process — a series of logical steps it follows to reach an answer.
+
+🔹 “As mentioned already, developers can optionally prompt agents built with GPT-4.1 to plan and reflect between tool calls, instead of silently calling tools in an unbroken sequence.”
+This means:
+Developers who create AI agents using GPT-4.1 can choose to make the model plan and reflect between each action or tool use.
+Normally, GPT-4.1 might just run tools one after another automatically (for example, calling a search tool, then a code tool, then a file tool) without explaining what it’s doing.
+But with the right prompt, developers can make GPT-4.1 pause, explain its reasoning, and reflect on what happened before taking the next step.
+In short — instead of acting like a robot that executes tasks, GPT-4.1 can be made to act like a human who plans each move carefully.
+
+🔹 “GPT-4.1 is not a reasoning model - meaning that it does not produce an internal chain of thought before answering -”
+This means GPT-4.1 does not naturally think silently in the background.
+It doesn’t generate hidden reasoning steps or mental calculations that you can’t see.
+It just reads the input and produces an output directly.
+In other words, it doesn’t have an internal “thought process” like humans or reasoning models (which might generate invisible intermediate steps before answering).
+
+🔹 “but in the prompt, a developer can induce the model to produce an explicit, step-by-step plan by using any variant of the Planning prompt component shown above.”
+Even though GPT-4.1 doesn’t think internally, developers can make it show its thinking through prompting.
+“Induce” means to cause or encourage something to happen.
+“Explicit” means clearly written out or visible.
+So, by adding a Planning instruction in the prompt (for example: “Please plan your steps carefully before solving this task”), developers can make GPT-4.1 write a visible,
+step-by-step plan before completing the task.
+This helps the model structure its reasoning clearly instead of jumping straight to an answer.
+
+🔹 “This can be thought of as the model ‘thinking out loud.’”
+This phrase means that when GPT-4.1 writes out its step-by-step plan, it’s like it’s showing you its thoughts — just as a person might speak their thought process aloud.
+It’s not actually “thinking” like a human, but it’s simulating the process by explaining what it’s going to do.
+
+🔹 “In our experimentation with the SWE-bench Verified agentic task, inducing explicit planning increased the pass rate by 4%.”
+This means OpenAI tested this idea using a benchmark called SWE-bench Verified — a dataset that measures how well AI agents solve software engineering (coding) problems.
+They found that when GPT-4.1 was prompted to plan explicitly (write its step-by-step thoughts), it performed 4% better — meaning it solved more tasks correctly.
+So, prompting GPT-4.1 to plan and reflect improves accuracy and reasoning quality.
+
+✅ In summary:
+GPT-4.1 doesn’t naturally have hidden reasoning (no internal chain of thought), but developers can prompt it to “think out loud” — planning and reflecting step-by-step between
+tool uses. This method, called prompting-induced planning, helps it solve problems more effectively — increasing accuracy by 4% in experiments.
+
+----non reasoning mtlb reinforcement learning ky tareeky se train ni kia gya jo reasoning model hn un m time ki cost h wo hr chez per reasoning krty hn lekin non reasoning m 
+sidha sawal kia model train hua ya hua va h to wo simple jawab dedega mtlb jo training hui h us per jawab dedega gpt-4.1 normal agent h  generative ai llm h nonn reasoning to isy 
+reasoing power dena chahty hn jo ky bht extensive level per hoti thi costly hoti thi to ab usy prompt engineering ki madad se reasoning krwa skty hn 
+
+
+🧠 1. Reasoning vs Non-Reasoning Models in AI
+Reasoning Models
+These models are specifically trained to think step-by-step before giving an answer.
+They create an internal “chain of thought” — meaning they reason through the problem internally, then provide the result.
+They are better for complex logical tasks, like solving math problems, writing code, or multi-step reasoning (planning, cause-and-effect, etc.).
+Example: Some versions of GPT-4 Turbo (reasoning models) are designed for tasks that require deep analysis or multi-step problem-solving.
+
+🧩 Example:
+Q: If you have 3 apples and give away 1, how many are left?
+A reasoning model will think internally: “3 - 1 = 2” → then answer “2.”
+
+Non-Reasoning Models
+These models don’t have an internal reasoning process — they generate answers directly from their training and the given prompt.
+They can still perform well, but don’t explicitly “think” through each step unless you make them do it in the prompt.
+Example: GPT-4.1 is a non-reasoning model. It can plan and reflect if you ask it to (through prompting), but it doesn’t automatically reason internally.
+
+🧩 Example:
+Q: If you have 3 apples and give away 1, how many are left?
+A non-reasoning model just knows the answer “2” from memory — it doesn’t consciously think “3 - 1 = 2.”
+
+⚙️ 2. Dynamic Instructions
+Dynamic Instructions are a feature in AI systems that allow real-time, flexible guidance during conversations or workflows.
+They change or adapt the model’s behavior depending on the situation or context.
+Instead of using fixed system prompts (which never change), dynamic instructions can update automatically based on:
+The user’s input
+The current task
+The conversation’s progress
+
+🧩 Example:
+You might set a dynamic instruction like:
+“If the user uploads a code file, switch to code analysis mode.”
+Or:
+“If the conversation becomes too long, summarize key points before continuing.”
+So, dynamic instructions make AI more adaptive, context-aware, and responsive — almost like it can “shift gears” depending on what’s happening.
+
+-----------What is a Context Window in AI?
+A context window is the maximum amount of text (tokens) an AI model like GPT can “see,” “remember,” and use at one time to generate a response.
+It’s basically the model’s short-term memory for a single conversation or request.
+
+🧠 How It Works
+When you chat with an AI, everything you and the model say gets turned into tokens (small pieces of words).
+The model reads these tokens to understand the situation and generate the next part of the answer.
+The context window decides how many tokens (words) the model can keep in mind at once.
+If the total conversation exceeds the limit, older parts get “forgotten” or cut off — the model can no longer access them.
+
+🔢 Example
+Let’s say:
+GPT-4.1 has a 1 million token context window (very large).
+You write a huge book or give it thousands of pages of code — it can still read, remember, and reason over all of it in one go.
+Older models had smaller context windows (like 8k or 32k tokens), meaning they could only handle a few pages at a time.
+
+--------------------Context Window:
+The maximum amount of text the AI can read, remember, and use at one time.
+🧩 Example: GPT-4.1 can handle up to 1 million tokens.
+
+Token:
+A small piece of text — it can be a word or part of a word.
+🧩 Example: The word “Hello” counts as 1 token.
+
+If the Limit Is Exceeded:
+The model forgets older parts of the conversation or text.
+🧩 Example: Earlier chat messages get cut off when the limit is reached.
+
+----💡 Why It Matters
+A large context window means the AI can:
+Understand long documents, books, or codebases
+Keep track of long conversations
+Answer complex questions using many sources at once
