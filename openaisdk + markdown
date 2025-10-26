@@ -664,11 +664,446 @@ Third item
 Fourth item
 
 
+------------------------Starting Unordered List Items With Numbers
+If you need to start an unordered list item with a number followed by a period, you can use a backslash (\) to escape the period.
+
+Markdown:(agr 1968 ky agay \ ni dalengy to wo isy ek number list hi consider krega to markdown ko yh btana ky 1968. ko normal text consider kro "." ko normal consider kro to uske liye
+backslash dalengy)
+- 1968\. A great year!
+- I think 1969 was second best.	
+
+output:(ab in dono ko yh lines hi consider krega or dono ky shuru m black circle ajyngy)
+1968. A great year!
+I think 1969 was second best.
+
+-----------------------Unordered List Best Practices
+Markdown applications don’t agree on how to handle different delimiters in the same list. For compatibility, don’t mix and match delimiters in the same list — pick one and stick with it.
+
+✅  Do this	
+- First item
+- Second item
+- Third item
+- Fourth item	
+
+❌  Don't do this
++ First item
+* Second item
+- Third item
++ Fourth item
 
 
 
 
+--------------------------Adding Elements in Lists------------------------
+To add another element in a list while preserving the continuity of the list, indent the element four spaces or one tab, as shown in the following examples.
 
+
+Markdown:
+* This is the first list item.
+* Here's the second list item.
+
+    I need to add another paragraph below the second list item.
+
+* And here's the third list item.
+
+
+------The rendered output looks like this:
+
+This is the first list item.(jis jis ky shuru m stearic h wo bullets bn jyngi mtlb black circle ajyngy or beech ki line i need to wali baghair bullet ky hogi jo btygi ky yh list m alg h)
+Here’s the second list item.
+
+I need to add another paragraph below the second list item.(yh paragraph bn jana)
+
+And here’s the third list item.
+
+
+Blockquotes(agr beech m blockquote chaiye to bhi wohi kam krengy bs blockquote keliye > sign lgadengy takay baqi bullets m rhyn or srf beech wali line blockquote bny mtlb uske shuru m 
+hrizonatal line ajaye)
+* This is the first list item.
+* Here's the second list item.
+
+    > A blockquote would look great below the second list item.
+
+* And here's the third list item.
+
+The rendered output looks like this:(beech wali line blockquote hogi or baqi teen stearic waly bullets hongy)
+
+This is the first list item.
+Here’s the second list item.
+
+A blockquote would look great below the second list item.
+
+And here’s the third list item.
+
+
+---------------------------Code Blocks------------------
+Code blocks are normally indented four spaces or one tab. When they’re in a list, indent them eight spaces or two tabs.
+
+
+Markdown:
+1. Open the file.
+2. Find the following code block on line 21:
+
+        <html>
+          <head>
+            <title>Test</title>(yh beech wala html wala code block bnjana )
+          </head>
+
+3. Update the title to match the name of your website.
+
+
+The rendered output looks like this:
+
+1.Open the file.
+2.Find the following code block on line 21:
+
+ <html>
+   <head>
+     <title>Test</title>
+   </head>
+
+3.Update the title to match the name of your website.
+
+
+-----------------Images---------------
+
+Markdown:
+1. Open the file containing the Linux mascot.
+2. Marvel at its beauty.
+
+    ![Tux, the Linux mascot](/assets/images/tux.png)(output m iski jagah image ajygi)(image lgany keliye shuru m ! ka mark dalty hn uske bd text likhty hn jo image ky nichy ay or akhir
+m image ki link deddety to whn se image smny nzr aygi)(agr kisi bhi wjh se image load na ho to jo text h [] is m wo ajana or uske shuru m chota sa eror pic bni aygi mtlb pic missing h 
+ya load ni hui)
+
+3. Close the file.
+
+
+
+---------------------Lists
+You can nest an unordered list in an ordered list, or vice versa.
+
+Markdown:
+1. First item
+2. Second item
+3. Third item
+    - Indented item
+    - Indented item
+4. Fourth item
+
+output:(1 2 3 4 waly to numbering m hi rhengy lrkin jinke sth - h wo circle bnjyngy without black color
+
+1.First item
+2.Second item
+3.Third item
+    Indented item
+    Indented item
+4.Fourth item
+
+
+<code>            (isy bhi codeblock bnta ha)
+x=4
+</code>
+
+
+(agr ``` backticks waly m naam ni likhengy python java ya markdown tb bhi wo blockcode hi consider hoga but lnaguage likhny se colors ajany jese python m varibale ka color alg hota 
+data type ka alg to wo color ajany)
+```markdown        (isy bhi code block lgta h markdown ki jagah python likhdo ya java to ussi ka codeblock bn jana
+> hey
+```
+
+summary:
+The triple backticks (```) start and end a code block.
+<code>...</code> is HTML code tag, also used to display code in Markdown.
+
+---------------Both methods (backticks and <code>) are valid for showing code in Markdown —
+Backticks → Markdown syntax
+<code> → HTML syntax inside Markdown
+
+
+---------------------Code----------------------------
+To denote a word or phrase as code, enclose it in backticks (`).(triple backticks multiple lines ko blockcode bnany keliye or single backtick kisi word ka phrase ko blockcode bnany 
+keliye use krty hn)
+
+Markdown	                                                                HTML	                                              Rendered Output
+At the command prompt, type `nano`.	                    At the command prompt, type <code>nano</code>.	                At the command prompt, type nano.
+(output m srf nano word blockcode bna hua hoga)         (output m srf nano word blockcode bna hua hoga)
+
+
+----------------------Escaping Backticks-----------------------
+If the word or phrase you want to denote as code includes one or more backticks, you can escape it by enclosing the word or phrase in double backticks (``).
+
+Markdown	                                                                    HTML	                                            Rendered Output
+``Use `code` in your Markdown file.``                    	<code>Use `code` in your Markdown file.</code>	                Use `code` in your Markdown file.
+(puri line blockcode hogi lekin us m code jo                 (puri line blockcode hogi lekin us m code jo 
+ word h uske agay pichy backticks ajany)                      word h uske agay pichy backticks ajany)
+
+
+
+--------------------------Code Blocks
+To create code blocks, indent every line of the block by at least four spaces or one tab.(starting m 4 spaces dedo ya ek tab dedo tb bhi yh blockcode bnjana)
+
+    <html>
+      <head>
+      </head>
+    </html>
+
+The rendered output looks like this:(yh block code hi bnega)
+<html>
+  <head>
+  </head>
+</html>
+
+
+
+----------------------Horizontal Rules
+To create a horizontal rule(line), use three or more asterisks (***), dashes (---), or underscores (___) on a line by themselves.
+
+***
+
+---
+
+___
+
+(agr 1 ya 2 dalengy *,-,_ to wo text hi consider hoga to zrori h teeno ko 3 rkhyn ya usy zyada )
+The rendered output of all three looks identical(teeno se line hi bnegi)
+
+
+
+--------------------------Horizontal Rule Best Practices
+For compatibility, put blank lines before and after horizontal rules.
+
+✅  Do this	
+Try to put a blank line before...
+
+---
+
+...and after a horizontal rule.
+
+
+❌  Don't do this
+Without blank lines, this would be a heading.(blank line ni dalengy to yh wali line heading bn jani kunke kisi bhi line ky nichy --- hiphen lgao to wo heading bnany ka tareeka h)
+---
+Don't do this!
+
+
+--------------------------Links--------------------
+(ham direct link bhi paste krskty hn or wo link click hokr open bhi hogi but uska mtlb hua hamy markdown ni ata to isiliye yh format krna h link paste krny keliye)
+To create a link, enclose the link text in brackets (e.g., [Duck Duck Go]) and then follow it immediately with the URL in parentheses (e.g., (https://duckduckgo.com)).
+
+My favorite search engine is [Duck Duck Go](https://duckduckgo.com).(isy yh hoga jese word m ham kch likhty or agr ham chahty wo link bny to right click krke link paste krdety to 
+test ka color blue hojata or wo link bn jati isi trh Duck Duck Go ko likhny ky foran bd link dedengy to wo link bn jani 
+
+OUTPUT:
+My favorite search engine is Duck Duck Go.(Duck Duck Go ka color blue hojana yh link bn jaygi
+
+
+-----------------------------Adding Titles-----------------------------
+You can optionally add a title for a link. This will appear as a tooltip when the user hovers over the link. To add a title, enclose it in quotation marks after the URL.
+
+My favorite search engine is [Duck Duck Go](https://duckduckgo.com "The best search engine for privacy").(yh jo link aygi us per jb cursor lekr jyngy to hover krny per likha aygathe best 
+search engine for privacy isi trh image paste krke bhi jo link h uske agay "" double quotation m jo bhi likhengy wo hover se ajana jb cursor lekr jyngy image per tb)
+
+
+OUTPUT:
+My favorite search engine is Duck Duck Go.(Duck Duck Go YH link to h or hover krny per text likha bhi ana)
+
+
+
+--------------------URLs and Email Addresses------------
+To quickly turn a URL or email address into a link, enclose it in angle brackets.
+
+MARKDOWN:(<> YH lgany se link or email bn jata)
+<https://www.markdownguide.org>
+<fake@example.com>
+
+Output:
+https://www.markdownguide.org(links bni ayngi yh dono)
+fake@example.com
+
+------------------------Formatting Links
+To emphasize links, add asterisks before and after the brackets and parentheses. To denote links as code, add backticks in the brackets.
+
+MARKDOWN:
+I love supporting the **[EFF](https://eff.org)**.
+This is the *[Markdown Guide](https://www.markdownguide.org)*.
+See the section on [`code`](#code).(jo #code h yh anchor link h that points to a section within the same document. It links to a heading or element with the ID code. or jo [] is m word
+code h wo link to bn jana but code block bhi bnjana kunke ` single backticks hn iske start or end m)
+
+output:
+I love supporting the EFF.(EFF yh link to bn jani lekin stearic ** ki madad se EFF bold bhi hojana)
+This is the Markdown Guide.(Markdown Guide jo h wo single stearic * ki wjh se italic bn jana)
+See the section on code.(code word jo h link or codeblock bn jyga)
+
+
+-----------------Reference-style Links
+Reference-style links are a special kind of link that make URLs easier to display and read in Markdown. Reference-style links are constructed in two parts: the part you keep inline 
+with your text and the part you store somewhere else in the file to keep the text easy to read.
+
+How it works:
+They have two parts:
+The first part is the text with a label → [text][label](text or link ky brackets ky beech m space na ho)
+The second part is the link definition → [label]: URL "optional title"
+
+Why use it:
+Instead of putting long, messy URLs in your main text, you move them to the bottom (like footnotes).
+
+
+----------------------------------example:
+This is a [Markdown Guide][1].
+[1]: https://www.markdownguide.org "Markdown Guide"
+
+Result:
+This is a Markdown Guide.(Markdown Guide link bn gya h or us per hover krny se Markdown Guide likha ayga)
+
+
+example:
+[hobbit-hole][1]   (hobbit-hole link bn gya h or nichy waly m se koi bhi choose kro link hi bnega)
+
+----The optional title for the link, which you can enclose in double quotes, single quotes, or parentheses.
+This means the following example formats are all roughly equivalent for the second part of the link:(nichy waly sb krskty sb titles ki types hn)
+[1]: https://en.wikipedia.org/wiki/Hobbit#Lifestyle
+[1]: https://en.wikipedia.org/wiki/Hobbit#Lifestyle "Hobbit lifestyles"
+[1]: https://en.wikipedia.org/wiki/Hobbit#Lifestyle 'Hobbit lifestyles'
+[1]: https://en.wikipedia.org/wiki/Hobbit#Lifestyle (Hobbit lifestyles)
+[1]: <https://en.wikipedia.org/wiki/Hobbit#Lifestyle> "Hobbit lifestyles"
+[1]: <https://en.wikipedia.org/wiki/Hobbit#Lifestyle> 'Hobbit lifestyles'
+[1]: <https://en.wikipedia.org/wiki/Hobbit#Lifestyle> (Hobbit lifestyles)
+
+
+-----------------An Example Putting the Parts Together--------------------
+Say you add a URL as a standard URL link to a paragraph and it looks like this in Markdown:
+
+In a hole in the ground there lived a hobbit. Not a nasty, dirty, wet hole, filled with the ends
+of worms and an oozy smell, nor yet a dry, bare, sandy hole with nothing in it to sit down on or to
+eat: it was a [hobbit-hole](https://en.wikipedia.org/wiki/Hobbit#Lifestyle "Hobbit lifestyles"), and that means comfort.( is pury paragraph m word habbit-hole link bn jana or hover krny
+per hobbit lifestyle bhi likha ana)
+
+
+---------------------another example-------------------------
+Though it may point to interesting additional information, the URL as displayed really doesn’t add much to the existing raw text other than making it harder to read. 
+To fix that, you could format the URL like this instead:
+
+In a hole in the ground there lived a hobbit. Not a nasty, dirty, wet hole, filled with the ends
+of worms and an oozy smell, nor yet a dry, bare, sandy hole with nothing in it to sit down on or to
+eat: it was a [hobbit-hole][1], and that means comfort.
+
+[1]: <https://en.wikipedia.org/wiki/Hobbit#Lifestyle> "Hobbit lifestyles"  (yh refrence wala zyada bhtr hoga upr wali example se kunke yh zyada clear or readable h)
+
+
+
+-------------------------Link Best Practices (Easy Summary)----------------------
+Spaces in URLs:
+Markdown doesn’t handle spaces in web addresses properly.
+
+To fix it, replace every space with %20.
+✅ Correct:
+[link](https://www.example.com/my%20great%20page)
+
+❌ Wrong:
+[link](https://www.example.com/my great page)
+
+
+Parentheses in URLs:
+URLs with ( or ) can also break.
+
+Replace them with:
+( → %28
+) → %29
+
+✅ Correct:
+[a novel](https://en.wikipedia.org/wiki/The_Milagro_Beanfield_War_%28novel%29)
+
+❌ Wrong:
+[a novel](https://en.wikipedia.org/wiki/The_Milagro_Beanfield_War_(novel))
+
+
+Alternative Option:
+If Markdown has issues with your link, you can safely use HTML <a> tags instead:
+
+<a href="https://www.example.com/my%20great%20page">link</a>
+
+
+✅ In short:
+To make sure links always work in Markdown —
+Replace spaces with %20
+Replace parentheses with %28 and %29
+Or use an HTML <a> tag for full compatibility.
+
+
+
+Images
+To add an image, add an exclamation mark (!), followed by alt text in brackets, and the path or URL to the image asset in parentheses. You can optionally add a title in quotation 
+marks after the path or URL.
+
+![The San Juan Mountains are beautiful](/assets/images/san-juan-mountains.jpg "San Juan Mountains")(preview m image ajygi or hover krny per San Juan Mountains yh likha ayga)
+
+
+
+--------------------Linking Images------------------------------
+To add a link to an image, enclose the Markdown for the image in brackets, and then add the link in parentheses.
+
+[![An old rock in the desert](/assets/images/shiprock.jpg "Shiprock, New Mexico by Beau Rogers")](https://www.flickr.com/photos/beaurogers/31833779864/in/photolist-Qv3rFw-34mt9F-a9Cmfy
+-5Ha3Zi-9msKdv-o3hgjr-hWpUte-4WMsJ1-KUQ8N-deshUb-vssBD-6CQci6-8AFCiD-zsJWT-nNfsgB-dPDwZJ-bn9JGn-5HtSXY-6CUhAL-a4UTXB-ugPum-KUPSo-fBLNm-6CUmpy-4WMsc9-8a7D3T-83KJev-6CQ2bK-nNusHJ-a78rQH
+-nw3NvT-7aq2qf-8wwBso-3nNceh-ugSKP-4mh4kh-bbeeqH-a7biME-q3PtTf-brFpgb-cg38zw-bXMZc-nJPELD-f58Lmo-bXMYG-bz8AAi-bxNtNT-bXMYi-bXMY6-bXMYv)
+(image to aygi ab image ko click krny per ek link di h jis per chly jyngy click krny per)(round bracket m end per link dedengy jo click hokr open hogi wo)
+
+
+
+
+------------------🧩 Escaping Characters in Markdown---------------
+To show a literal character (that Markdown normally uses for formatting), add a backslash (\) before it.
+Example: \* → renders as * and not as a bullet point.
+
+Rendered Example:
+\* Without the backslash, this would be a bullet in an unordered list.(agr backslash na hoti to * ki wjh se is line ko bullet point smh jata or black circle ajata shuru m kunke hamy 
+input m \* lgaya h to * isko as a character hi lega
+output :   * Without the backslash, this would be a bullet in an unordered list.
+
+✅ Characters You Can Escape
+You can use a backslash (\) to escape these characters:
+\ (backslash)
+` (backtick)
+* (asterisk)
+_ (underscore)
+{ } (curly braces)
+(brackets)
+< > (angle brackets)
+(parentheses)
+# (pound sign)
++ (plus sign)
+- (minus sign)
+. (dot)
+! (exclamation mark)
+| (pipe symbol)
+
+🧠 Using HTML in Markdown
+Markdown allows embedding HTML tags directly in text.
+This is useful when:
+You prefer HTML syntax for images or text.
+You want to change attributes (like color, size, width, etc.).(jese image dalengy to uski width manage krni to html use krskty)
+
+Example:
+This **word** is bold. This <em>word</em> is italic.
+
+output:(word bold ajana or word italic bhi hojana
+This word is bold. This word is italic.
+
+⚙️ HTML Best Practices:
+⚠️ Not all Markdown applications support HTML. Some only allow specific tags for security reasons.
+Always check your Markdown app’s documentation for HTML compatibility.
+Use blank lines before and after block-level HTML elements like <div>, <table>, <pre>, or <p> for correct formatting.
+Avoid indenting HTML tags with spaces or tabs — this can break the layout.
+You cannot use Markdown syntax inside HTML tags.
+Example: <p>italic and **bold**</p> ❌ (will not render correctly)
+
+✅ In short:
+Use a backslash \ to display Markdown symbols as text, and HTML tags when you need more control over formatting — but follow best practices for compatibility and security.
+
+
+
+-----llm simple text bhi smjhta h but llm train markdown per bhi hua h blky sbse zyada system instruction markdown m h to agr ham input markdown m dengy to bhtr smjhega ab ham ek lmba
+prompt derhy to us m heading hongi kahin word bold hoga kahin bullets hongi to un sb ko ham kese prompt m bold ya bara krengy to uske liye ham markdown ko use krngy jisy llm acha
+smjhega.
 
 
 
