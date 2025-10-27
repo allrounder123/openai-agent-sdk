@@ -1,1 +1,263 @@
+--runner ky andr bht sari chizain chlrhi hoti hn or agr ham dekhna chahty hn ky runner m kya chezain chlrhi ky kis step per kya chez chlrhi kis trh se chlrhi hn to kch callbacks hn jo runner
+loop khud se krta h or yh callbacks do trh ki hn ek agent level or ek runner level ki 
+---context mutable object h python ky andr
+---AgentHooks = AgentHooksBase[TContext, Agent]-------------------(tcontext is custom data class or object
 
+-----------
+T = TypeVar("t")  #t ko string pas krdia to sari jagah per string hi hoga   
+#faida h type set krny ka
+
+
+----------
+from dataclasses import dataclass, field
+from typing import TypeVar
+from pydantic import BaseModel
+
+T = TypeVar("T")(yh T generic variable h, yh generic class bnany ky kaam ayga generic classes mtlb wo classes jo sb data type ky sth chl skti hn,Here, T in the bracket can later represent
+any type (e.g., int, str, or even a custom model).)
+
+class myTest(BaseModel):(yh pydantic se basemodel import kia h)This defines a Pydantic model(since it inherits from BaseModel).BaseModel automatically validates data types and structures.)
+(The model has three integer fields:id,idsub,abc )
+    id: int
+    idsub: int
+    abc: int(This class defines the data structure you’ll later store inside the MyTest dataclass using the generic type T.)
+
+@dataclass(@dataclass automatically generates a constructor and other useful methods.)
+class MyTest[T]:(@dataclass upr likhny se yh dataclas bn gai h)(MyTest[T] is a generic dataclass that can hold any type of data T.)
+    mydata: T(It has one field: mydata, whose type is whatever T represents.)
+(Here, T (from TypeVar) will later be replaced with myTest, meaning mydata will hold an instance of the myTest model.)
+
+output = MyTest[myTest]()(MyTest ko myTest class pass krdi or mydata ko T krdia  mtlb jo myTest upr wali class m id,idsub,abc se wo ab mydata m agya)
+(This line instantiates the MyTest dataclass, telling Python that:
+T should be myTest.
+In other words, output is an object of type:
+MyTest containing a field mydata of type myTest.
+However, since no data is passed, mydata is currently empty.)
+
+
+
+
+--------------simple code-------------------
+from agents import Runner, RunHooks, RunContextWrapper, Agent
+from typing import TypeVar
+from dataclasses import dataclass, field
+from pydantic import BaseModel
+
+
+class MytestData(BaseModel):
+    name: str
+    age: int
+
+
+class MyCustomRunHooks(RunHooks):
+    def on_start(self, context: RunContextWrapper[MytestData], agent: Agent):
+        print(f"Starting run for agent: {agent.name}")
+
+    def on_end(self, self, agent, output):
+        print(f"Run completed for agent: {agent.name}, output: {output.final_output}")
+
+
+---------------------explanation----------------------------------------------------------
+from agents import Runner, RunHooks, RunContextWrapper, Agent(RunHooks – A base class used to define custom lifecycle hooks. You subclass it to run custom code when the agent 
+starts, ends, or encounters events,Runner – Responsible for running an agent (starts, executes, and manages runs).RunContextWrapper – A wrapper object that carries runtime context 
+(like input/output data, metadata, etc.) during an agent’s run, Agent – Represents the actual AI agent that performs reasoning, tool calls, or responses.)
+from typing import TypeVar(TypeVar allows you to create a generic type variable, letting you define classes that can handle data of any type.)
+from dataclasses import dataclass, field(dataclass → a decorator that automatically generates class methods like __init__, __repr__, etc,field → used to customize dataclass fields 
+(e.g., default values).)
+from pydantic import BaseModel(Imports BaseModel from the Pydantic library,Pydantic models are used to define structured data schemas with automatic type checking and validation)
+
+
+(This model defines what kind of data your agent will handle inside the RunContextWrapper.)
+class MytestData(BaseModel):(yh pydantic class bnadi)(class MytestData(BaseModel):Defines a data model named MytestData, inheriting from BaseModel.This model is meant to hold 
+structured data (like input/output for an agent).)
+    name: str(yh us class m data dal dia)(These are model attributes (fields).name → a string field,age → an integer field,Pydantic ensures that when data is passed into this class,
+name must be a string and age must be an integer — otherwise it raises an error.)
+    age: int
+
+
+(You can use this to log, modify, or inspect input data before the agent actually starts reasoning.)
+class MyCustomRunHooks(RunHooks):(Creates a custom subclass of RunHooks.)
+    def on_start(self, context: RunContextWrapper[MytestData], agent: Agent):(yhn RunContetWrapper ko MyTestData ki puri class dedi ab is m name or age ka data para h)(Defines a method 
+that runs when the agent starts executing.self: the instance of your MyCustomRunHooks class,context: the run context containing your custom data — here it’s specifically typed as 
+RunContextWrapper[MytestData], meaning it wraps data structured according to the MytestData model,agent: the agent instance being run (contains metadata like name, configuration, etc.).))
+        print(f"Starting run for agent: {agent.name}")
+(Prints a message to the console showing which agent has started running.{agent.name} uses an f-string to insert the agent’s name dynamically.)
+
+
+This helps you verify or log what the agent produced at the end of its reasoning cycle.
+    def on_end(self, self, agent, output):(Defines another lifecycle method that runs after the agent finishes its execution.Parameters:self: the hook instance,agent: the same agent that
+was run,output: the result of the agent’s run (includes final outputs or intermediate results).))
+        print(f"Run completed for agent: {agent.name}, output: {output.final_output}")
+(Prints a message indicating the run has finished.Displays:The agent’s name,The agent’s final output (accessed as output.final_output).)
+
+
+---------jb bhi koi tool call hoga to uska result lazmi string hi hoga string ky ilawa dusra option ni h none wagaira ka. string ky ilawa kch hoga to wo function outputs ky pas jyga or
+function output ky pas jany ky bd wo break hojyga kunke output m string chaiye
+
+----runhook hamary kisi bhi agent ko chalata h
+---runhook hr ek runner ky sth tha or agenthook hr ek agent ky sth hoga
+
+
+------------------------
+on_handoff(--------------(yh mery agent ka handoff cl hua h meri frnd ne mujhe company dedi to wo source hui m agent hui jiske pas sari responsibilty agai h ab company ki)
+    context: RunContextWrapper[TContext],
+    agent: TAgent,(agent jisko handoff dia jarha ha wo hoga)
+    source: TAgent,(source jo handoff derha ha )
+) -> None
+
+
+
+
+---------phly agent ky pas context ni hota none hota h second third or uske bd waly agents ko context pas krskty hn
+
+
+
+
+---------------HOOKS CODE----------------------
+from agents import Agent, AgentHooks,RunHooks, Runner, AsyncOpenAI, set_default_openai_client, set_tracing_disabled, set_default_openai_api
+from agents import function_tool
+import os
+from dataclasses import dataclass, field
+from typing import TypeVar
+from dotenv import load_dotenv
+from pydantic import BaseModel
+from agents import Runner, RunHooks, RunContextWrapper, Agent
+
+
+
+load_dotenv()
+from agents import enable_verbose_stdout_logging
+enable_verbose_stdout_logging()
+
+gemini_api_key = os.getenv('GEMINI_API_KEY')
+
+set_tracing_disabled(True)
+set_default_openai_api("chat_completions")
+
+external_client = AsyncOpenAI(
+    api_key=gemini_api_key,
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+)
+
+set_default_openai_client(external_client)
+
+
+class MytestData(BaseModel):
+    name: str
+    age: int
+
+
+class MyCustomRunHooks(RunHooks):
+    async def on_agent_start(self,context: RunContextWrapper[MytestData],agent:Agent):
+        print(f"starting run for agent: {agent.name},{context.context.age},{context.context.age}")
+    
+    async def on_agent_end( self, context: RunContextWrapper[MytestData], agent: Agent, output):
+        print(f"run completed for agent: {agent.name} , output: {output}")
+
+ 
+class MyCustomAgentHooks(AgentHooks):
+    async def on_start(self,context: RunContextWrapper[MytestData],agent:Agent):
+        print(f"starting run for agent: {agent.name}")
+    
+    async def on_end(self, context: RunContextWrapper[MytestData], agent: Agent, output):
+        print(f"run completed for agent: {agent.name} , output: {output}")
+
+
+agent = Agent(             #----------(yh phla agent h to iske sth context ni ayga baqi 2nd 3rd or so on agent ky sth aaskta h)
+    name="test_agent",
+    instructions="You are a helpful assistant",
+    model="gemini-2.0-flash",
+hooks=MyCustomAgentHooks()  )   #jitny agent hongy unke sth agenthook lgaskty
+
+test_data = MytestData(name='ISHA',age=30)
+result = Runner.run_sync(agent, "hi ",context=test_data, hooks=MyCustomRunHooks())#jitny runner hongy nunke sth runhook lgaskty
+
+print(result.final_output)
+
+---------------------------------------------------------------------------------------------------------
+
+
+-----ANY use krny se hamy ni pta chlyga ky name h age h ya kya h na hi runtime per pta chlega na hi compile time per kisi bhi point per type ni pta chlega generic ka yh fiada hua ky as 
+library framework ya author ham sochain ky m jo library bna rhi hu mujhe ni pta ky us m ek hazar developer ayngy ya ek lakh wo kya krengy is code ky sth but as a developer m chahta hu
+mujhe ptalgy ky is context m kya type arhi h to isy agent ko btaskty hn ky tumhary pas kya type arhi ha
+
+
+----------code of any or generic---------------
+🧩 Generic vs Any in Python (typing module)
+
+1. Any
+Means anything is allowed — no type checking.
+Lets you assign any type (int, str, list, etc.) to the same variable.
+
+Example:
+from typing import Any
+x: Any = 5
+x = "hello"
+
+✅ Use when you don’t care about the variable’s type or need full flexibility.
+
+2. Generic
+Used to create type-safe templates (like in C++ or Java).
+Ensures type consistency across related variables or methods.
+
+Example:
+from typing import TypeVar, Generic
+T = TypeVar("T")
+
+class Box(Generic[T]):
+    def __init__(self, item: T):
+        self.item = item
+
+
+✅ Use when you want reusable, type-safe classes or functions.
+
+💡 In Short
+Any → “Type doesn’t matter.” (no checking)
+Generic → “Works for any type, but type must stay consistent.”
+
+
+------------------Quick Example Difference
+from typing import Any, TypeVar, Generic
+
+# Using Any
+def identity_any(x: Any) -> Any:
+    return x
+
+# Using Generic
+T = TypeVar("T")
+def identity_generic(x: T) -> T:
+    return x
+
+
+identity_any(123) → Type checker won’t track what type you return.
+identity_generic(123) → Type checker knows it returns an int.
+
+
+
+---------lifecycle hooks : lifecycle mtlb kisi bhi chez ka start se end tk chlny ka time uske process cycle uski chizain or hooks bnadiye is m mtlb ghr m enter hony se bahar niklny tk
+ka time lifecycle h or m ghr m ai usy phly uske bd ka hook bna lia bethi hu m sofay per to bethny se phly or bethny ky bd hook bna lia or ghr se nikli to nklny se phly or nklny ka bd 
+hook bnalia to isy ek control hamy mil gya ky agent start hony se phly agr koi kaam krana h to uska hook bnalengy handoff end hony ky bd koi kam krwana h tool call hony se phly or uske
+bd koi kam krwana h to uska hook bnalia or yh hook bnana mtlb function bnana or yh bhi h ky agent cl hony se phly agr koi method hota MytestData(pydantic class jo upr hook waly code m 
+bnai h uski bt krrhi)m to usy cl krke context m kch update bhi krwskty hn 
+
+----runnerhook ka mtlb runner ki puri lifecycle ko cover kro or agenthook mtlb jo ek agent start or end hua h  us part ko cover kro uski lifecycle ko ky uska individual kya kam tha
+
+---agent m generic use krny ka purpose:
+by default agent ki type h generic,agent ky pas bhi to context jarha haina wo context agent apny andr jitni bhi chizain hn unhy bhi deta h tool ya prompt ko deta h bydefault to agent
+generic h usko to ni pta ky kya type hogi uski lekin agr ham chahain to agent ki bhi type cast krskty hn bydefault agent ko kch bhi na dain to uski type generic hi rhti h runtime per wo
+type inherit krleta h jb usy ham pas krty hn or agr ham phly se hi assign krdain agent ko ky yh ek text wala agent h to uski datatype phly hi bnadi h to usy bhi pas krskty hn
+
+---generic is for typing , type btarhy hn to uske liye generic ko use krrhy hn or pydantic ka main kaam h data validation pydantic ko generic ky sth bhi use krskty dataclass ky sth bhi
+use krskty yh hamary code ky structure per depend krta h or agr pydantic ko generic ke sth use krna h to pydantic built-in type deta h generic keliye to usy bhi use krskty
+
+--data type phly de deny ka faida yh h ky ham koi class pass krwa rhy kisi dusri clas ko or jo pas krwa rhy us m data h name or age or name str h or age int to yh valdiation keliye 
+important hoga us data ky ky jo data arha jarha h wo naam or age hi haina kahin charater ya float to ni to yh validation keliye use hota
+
+--runnenr ki lifecycle m callback hooks chlrhy hoty hn ek ek point per ham steps dekh skty hn ky hamary runner ky andr kya kaam horha h kb llm ko cl jarhi h kb handoff horha runner m 
+10 agent bn skty 50 llm ki calls bhi jaskti hn handoff hoskty hn
+--agenthooks m hamne dekha ek agent ki lifecycle m kya kya chizain chlrhi hn
+
+----use case of hooks-------
+hamy hooks m agent bhi milrha h context bhi milrha h or kch cases m hamy teesra argument bhi mil jata h ky input output kya hoskta h, input kya gya output kya ayaa
+--context agent ya runner ki lifecycle ka hota h hooks m ab usy access krke database m bhi save krskty hn or us context ko update bhi krskty hn to on_agent_start se phly hi update 
+krdengy context ko takay updated context hi jaye to zrori ni ky context ek dfa runner m save kia or pury loop m wohi chlrha h to ham usy update bhi krskty hn
