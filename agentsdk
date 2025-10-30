@@ -48,7 +48,7 @@ Think of it as:
 
 
 
----------------------SYNC CODE--------------(WORK ON GOOGLE COLAB)--------------
+---------------------SYNC FUNCTION IN RUNNER--------------(WORK ON GOOGLE COLAB)--------------
 !pip install -Uq openai-agents
 import nest_asyncio
 nest_asyncio.apply()
@@ -92,7 +92,7 @@ print(result.final_output)
 
 
 -------------------------------------------------------------------------------------------------------------------------------------
--------------ASYNC CODE----------------------------
+-------------ASYNC FUNCTION IN RUNNER----------------------------
 !pip install -Uq openai-agents
 import nest_asyncio
 nest_asyncio.apply()
@@ -122,17 +122,17 @@ config = RunConfig(
     model = llm_model,
     model_provider = external_client,
     tracing_disabled= True
-)
+)---(run time configuration)
 
 async def main():
     agent = Agent(
-        NAME = "Assistant",
+        name = "Assistant",
         instructions="You only respond in haikus."
     )
 
     result = await Runner.run(agent, "Tell me about recursion in programming.", run_config=config)-----------(.run ka method Runner m by-default async hi hota h)( or await mtlb jo kam 
 krrha h uska wait krega or jb wo response ajyga usko result m dal dega)
-    print(result.text.output)
+    print(result.final_output)
     # Recursion
     # A function calls self,
     # Looping in smaller pieces,
@@ -140,3 +140,161 @@ krrha h uska wait krega or jb wo response ajyga usko result m dal dega)
 
 if __name__ = "__main__":(is line ki zrort .py file m hoti h jo vs or cursor m hota h yhn iski zrort ni h kunke google colab m import asyncio krdia h hamne jo async ky sary function chlata ha
 asyncio.run(main())
+
+
+
+--------------chatgpt foran reply krta h to wo async h agr kisi kam per soch kr phr response kry to wo sync
+
+-------------------STREAMED FUNCTION IN RUNNER-----------------------
+!pip install -Uq openai-agents
+import nest_asyncio
+nest_asyncio.apply()
+from agents import Agent, Runner,RunConfig, AsyncOpenAI, OpenAIChatCompletionsModel, set_tracing_disabled
+from agents.run import RunConfig
+import asyncio
+
+from google.colab import userdata
+gemini_api_key = userdata.get("GEMINI_API_KEY")
+
+# Tracing disabled
+set_tracing_disabled(disabled=True)
+
+# 1. Which LLM Service?
+external_client: AsyncOpenAI = AsyncOpenAI(
+    api_key=gemini_api_key,
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+)
+
+# 2. Which LLM Model?
+llm_model: OpenAIChatCompletionsModel = OpenAIChatCompletionsModel(
+    model="gemini-2.5-flash",
+    openai_client=external_client
+)
+
+config = RunConfig(
+    model = llm_model,
+    model_provider = external_client,
+    tracing_disabled= True
+)
+
+async def main():
+    agent = Agent(
+        name = "Assistant",
+        instructions="You only respond in haikus."
+    )
+
+    result = Runner.run_streamed(agent, "Tell me about recursion in programming.", run_config=config)
+    print(result)
+    async for e in result.stream_events():
+      print(e)
+    # Recursion
+    # A function calls self,
+    # Looping in smaller pieces,
+    # Endless by design.
+
+
+asyncio.run(main())
+
+
+-------------------IMPORTANT:
+That’s one of the 3 main ways to run an agent in the Agents SDK:
+
+run_sync → normal, blocking
+run_async → async, non-blocking
+run_streamed → streaming, real-time output
+
+
+⚡ What is “streaming”?
+Streaming means:
+The model starts sending partial output while it’s still generating the rest.
+So instead of waiting for the whole response (like sync/async do), your code receives chunks (events) of the output as soon as they’re available.
+
+Think of it like:
+Non-streamed (sync/async): Wait till the whole essay is done → print once.
+Streamed: Show words as they’re typed → print gradually, real-time.
+
+🧠 Runner.run_streamed() — what it does
+It starts an asynchronous run.
+Immediately returns a streaming result object (not the final text).
+That result object emits events as the model generates output.
+
+---------------You can then do:CODE-----------------
+
+async for e in result.stream_events():
+    print(e)
+
+→ This listens for events like tokens, messages, or tool calls as they happen.
+This is perfect for live chat UIs (like Chainlit, Gradio, or Colab outputs).
+
+------------------------------------------------------------------------------
+
+🔄 Runner.run_async() — what it does
+Runs the same logic but waits until the full response is ready before returning.
+You can await it to get the entire message result directly.
+No live token-by-token updates.
+
+Example:
+
+result = await Runner.run_async(agent, "Hello!", run_config=config)
+print(result.final_output)
+
+Use it when: you just need the full answer, not a live stream.
+--------------------------------------------------------------------------------------
+
+⏳ Runner.run_sync() — what it does
+Same as run_async but for non-async (normal) Python code.
+Blocks until the full run completes (like a normal function).
+
+Example:
+
+result = Runner.run_sync(agent, "Hello!", run_config=config)
+print(result.final_output)
+
+Use it when: you’re in a plain Python script (no asyncio).
+
+
+
+
+---------------------------------------------------------------------
+💬 In your code:
+
+result = Runner.run_streamed(agent, "Tell me about recursion...", run_config=config)
+
+Starts the agent.
+Doesn’t wait for full completion.
+Gives you a stream handle in result.
+
+Then this part:
+
+async for e in result.stream_events():
+    print(e)
+
+prints the tokens or partial responses live, as they arrive.
+That’s how you get “live typing” or real-time generation.
+
+
+---------------------------------------------
+🧠 What is Runner?
+Runner is a controller class in the OpenAI Agents SDK that’s responsible for executing (running) an agent.
+Think of it as the engine that takes:
+your Agent (the brain),
+a user input (the question),
+a RunConfig (the setup),
+and actually runs the full conversation or reasoning process.
+
+⚙️ In short:
+Runner = the component that manages how an agent’s logic is executed — including tool calls, message handling, and LLM requests.
+---runner jo h wo client to server communication krwata ha or communication sync hogi asyn hogi ya streamed hogi yh define krty.
+
+
+---------------------------------------
+🧱 Analogy — AI system as a car
+Agent → The driver — knows what to do and how to respond.
+RunConfig → The GPS/settings — defines which model, API key, and configuration to use.
+Runner → The engine — actually runs the process and makes the agent work.
+Without the Runner, the agent just exists but can’t perform any actions.
+
+🧰 Runner’s Main Methods
+run_sync() → Runs the agent normally (blocking execution until done).
+run_async() → Runs the agent asynchronously using await (non-blocking).
+run_streamed() → Runs the agent in streaming mode, giving partial outputs live while generating.
