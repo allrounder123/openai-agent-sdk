@@ -4,7 +4,10 @@
 --------openai ky sdk ko use krty huy ham apny customize llm ko use krty hn jese openai m gemini flash use krty-----------------sdk agent or sary ky sary features sdk ky hongy lekin 
 backend per jo llm hoga wo free wala hoga gemini ka-------------demagh jo h wo gemini ka or jo decision making wagaira h wo openai sdk ka h
 -----------sync mtlb task jb perform horha h ussi wqt response do , or async mtlb 10 15 mnt bhi sochlo or jb response complete hojye tb response dedo
-
+--------Runner m bht sary function method hoty by default async hota or ham Runner.run_sync krty hn (run_sync method h Runner m)(client to server communication jo krwaty hn wo sary 
+tareeky runner m mojud hn)
+------sync mtlb mene apko kaha biryani lekr ao to jb tk ap biryani ni laogy tb tk m wait krungi kisi  se bt ni krungi intezar krungi or async mtlb mene kaha ap biryani lekr ao or jb tk ap
+ni aty tb tk m baqi kaam nipta lungi bt krlungi sbse kaam krlungi
 
 
 
@@ -40,3 +43,100 @@ This is where the agent actually processes input, calls tools, and produces outp
 
 Think of it as:
 🏃 “What happens right now while the agent is running.”
+
+
+
+
+
+---------------------SYNC CODE--------------(WORK ON GOOGLE COLAB)--------------
+!pip install -Uq openai-agents
+import nest_asyncio
+nest_asyncio.apply()
+from agents import Agent, Runner,RunConfig, AsyncOpenAI, OpenAIChatCompletionsModel, set_tracing_disabled
+from agents.run import RunConfig
+
+from google.colab import userdata
+gemini_api_key = userdata.get("GEMINI_API_KEY")
+
+# Tracing disabled
+set_tracing_disabled(disabled=True)
+
+# 1. Which LLM Service?
+external_client: AsyncOpenAI = AsyncOpenAI(
+    api_key=gemini_api_key,
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+)
+
+# 2. Which LLM Model?
+llm_model: OpenAIChatCompletionsModel = OpenAIChatCompletionsModel(
+    model="gemini-2.5-flash",
+    openai_client=external_client
+)
+
+config = RunConfig(
+    model = llm_model,
+    model_provider = external_client,
+    tracing_disabled= True
+)
+
+math_agent: Agent = Agent(name="MathAgent",
+                     instructions="You are a helpful math assistant.",
+                     model=llm_model) # gemini-2.5 as agent brain - chat completions
+
+result: Runner = Runner.run_sync(math_agent, "why learn math for AI Agents?", run_config=config)
+
+print("\nCALLING AGENT\n")
+print(result.final_output)
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------
+-------------ASYNC CODE----------------------------
+!pip install -Uq openai-agents
+import nest_asyncio
+nest_asyncio.apply()
+from agents import Agent, Runner,RunConfig, AsyncOpenAI, OpenAIChatCompletionsModel, set_tracing_disabled
+from agents.run import RunConfig
+import asyncio(is library se koi bhi async function chla skty hn)
+
+from google.colab import userdata
+gemini_api_key = userdata.get("GEMINI_API_KEY")
+
+# Tracing disabled
+set_tracing_disabled(disabled=True)
+
+# 1. Which LLM Service?
+external_client: AsyncOpenAI = AsyncOpenAI(
+    api_key=gemini_api_key,
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+)
+
+# 2. Which LLM Model?
+llm_model: OpenAIChatCompletionsModel = OpenAIChatCompletionsModel(
+    model="gemini-2.5-flash",
+    openai_client=external_client
+)
+
+config = RunConfig(
+    model = llm_model,
+    model_provider = external_client,
+    tracing_disabled= True
+)
+
+async def main():
+    agent = Agent(
+        NAME = "Assistant",
+        instructions="You only respond in haikus."
+    )
+
+    result = await Runner.run(agent, "Tell me about recursion in programming.", run_config=config)-----------(.run ka method Runner m by-default async hi hota h)( or await mtlb jo kam 
+krrha h uska wait krega or jb wo response ajyga usko result m dal dega)
+    print(result.text.output)
+    # Recursion
+    # A function calls self,
+    # Looping in smaller pieces,
+    # Endless by design.
+
+if __name__ = "__main__":(is line ki zrort .py file m hoti h jo vs or cursor m hota h yhn iski zrort ni h kunke google colab m import asyncio krdia h hamne jo async ky sary function chlata ha
+asyncio.run(main())
