@@ -1,2 +1,14 @@
-openai
+---achi abstraction wo hoti h jis m limited chizain compose krke complicated chizain bnayn
+---agents llm ky object hn or wo ek dusry se handsoff krdety hn(jese relay race m ek dusry ko dety hn or sb apni apni bari krke bhagty or ruk kr dusry ko dety hn phr dusra bhagta h
+-----------------------------------------------*------------------------------langgraph or crewai parhna ha-------------------------------*-------------------------------------
+---🧠 Agents:
+Think of them as smart AI workers (LLMs) — each trained with special rules or tools (like web search or file reading). They understand what’s going on and decide what action or tool to use next.
 
+🤝 Handoffs:
+When one agent can’t handle a task, it passes (or “hands off”) the job to another agent that’s better suited for it — like teamwork between AI agents.
+
+🛡️ Guardrails:
+These are safety rules that check what agents say or do. They stop them from going beyond limits or making mistakes.
+
+📊 Tracing & Observability:
+This feature lets developers watch and debug what the agents are doing step by step — helpful for fixing issues and improving performance.
