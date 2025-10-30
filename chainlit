@@ -150,7 +150,7 @@ model= OpenAIChatCompletionsModel(
     openai_client=provider
 )
 
-config = RunConfig(
+config = RunConfig(---------(RUN TIME PER USE kry keliye run time configuration krty hn yh)
     model = model,
     model_provider = provider,
     tracing_disabled= True
@@ -195,3 +195,61 @@ async def main(message: cl.Message):
     await cl.Message(
         content=result.final_output
     ).send()
+
+
+
+
+------------------------------CHAINLIT VS STREAMLIT------------------------------- 
+⚙️ Purpose
+
+Chainlit:
+👉 Built specifically for AI chat and LLM applications (like ChatGPT-style UIs).
+
+Streamlit:
+👉 Built for general data apps and dashboards (data science, ML visualization, etc.).
+
+💬 Main Focus
+Chainlit: ChAt interface for conversational agents.
+Streamlit: Interactive apps for data visualization, ML models, and input forms.
+
+🧠 Use Case
+Chainlit:
+Chatbots
+LLM agents
+Tool-using AI assistants
+
+Streamlit:
+Dashboards
+Data analysis tools
+Model demos and reports
+
+🧩 UI Type
+Chainlit: Ready-made chat UI (messages, avatars, typing effect, etc.)
+Streamlit: UI built with widgets (st.text_input, st.button, st.chart, etc.)
+
+⚡ Integration
+Chainlit: Integrates easily with LLMs, OpenAI, Agents SDK, LangChain, etc.
+Streamlit: Integrates with pandas, matplotlib, sklearn, etc.
+
+🕹️ Interactivity
+Chainlit: Message-driven (event = user sends a message).
+Streamlit: Widget-driven (event = user clicks a button or updates a value).
+
+
+🔹 Difference Between Chainlit and Streamlit
+
+Chainlit is made for AI chat apps (like ChatGPT-style interfaces).
+Streamlit is made for data dashboards and ML model demos.
+Chainlit gives a ready chat UI with message bubbles and streaming text.
+Streamlit uses widgets (buttons, inputs, charts, etc.) to build apps.
+Chainlit is message-driven → responds when a user sends a message.
+Streamlit is widget-driven → reacts to button clicks or input changes.
+Chainlit integrates easily with OpenAI, LangChain, and Agents SDK.
+Streamlit integrates well with pandas, matplotlib, sklearn, etc.
+Run command for Chainlit: chainlit run app.py
+Run command for Streamlit: streamlit run app.py
+
+✅ In short:
+
+Chainlit → best for chatbots and LLM agents.
+Streamlit → best for data visualization and ML dashboards.
