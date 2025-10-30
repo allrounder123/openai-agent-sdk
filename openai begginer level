@@ -20,6 +20,7 @@ When one agent can’t handle a task, it passes (or “hands off”) the job to 
 kam bolengy krny keliye or usy lgyga ky yh mere bas ka kam ni ha ya us agent ky pas iske related information ni hoga to wo kisi or agent ko dedega jiske pas us query ki knowledge or information
 hogi to instead ky agent apny se answer dy ya bnaye wo kisi dusry agent ko dedega ky yh kam ap krke user ko answer dedo to yh handoffs ka concept h iske through agent to agent communication
 horhi ha or yh us point per hoti h jb agent ko lgy ky mere pas iski specialization ni h iske liye koi or person means agent mojud ha jiski specialization mere se bhi zyada ha is bary m
+---handoffs pura context jama krrha h ky user ka sawal kya tha context kya h abhi tk kitna kaam hua h or agents ky pas jo sawal jarha ha wo proper handoffs hokr jarha h or agent jawab dedeta h
 
 🛡️ Guardrails:
 These are safety rules that check what agents say or do. They stop them from going beyond limits or making mistakes.
@@ -28,9 +29,83 @@ related hi information le sky kunke is agent ka kaam h srf students ko guide krn
 --ek agent h customer support keliye usko ham akr bolain ky hamary liye web search krke yh search krdo to wo ni krega kunke uske pas built-in guardrails hn jo rules or boundaries hn hr agent 
 unhi boundries m kam krta or asa bhi hoskta h ky ek agents ka grp ho jo sb customer support keliye hon unhy agr ham kehdain ky websearch kro to wo jawab dedengy ky ni hamara kam yh ni ha 
 to ham apki is bary m help ni krskty
+---guardrails mtlb ab hamne ek agent ko restrict kia hua h ky output json m hi ana chaiye to kisi or m agr mangengy answer ky xml output m ay to wo ni ayga
+-----guardrails input or output ky ham set krskty hn(input per guardrails mtlb koi galian dekr sawal ni puchega or output wohi ky json m answer ay ya srf json or xml m answer aay
+--guardrails analyzer h jese uske pas input aya usne task analyze kia or smjha or phr usy agent ky handoffs krdia or ab agent ky pas kam aya agent ek powerful tool h jo kisi specific 
+specialization per pr-trained h
+---task direct agent ky pas ni ayga task guardrails ky input ky pas aya usne analyze kia usne bhi pichy llm ko use kia hoga to phr usne agent ko handoffs krdia or phr agent ne tool cl 
+krke jawab dedia ya uske baghair dedia jawab
 
-📊 Tracing & Observability:
+📊 Tracing & Observability:(monitoring krna)
 This feature lets developers watch and debug what the agents are doing step by step — helpful for fixing issues and improving performance.
----agents bnaliye or wo sahi kam bhi krrhy hn lekin hamy kese pta lgyga ky wo sai kaam krrhy hn ya ni krrhy kya kya kaam krrhy hn koi chez ghlt bhi krdi hogi to ham out of the box ek ek run 
-ko debug or visualize krskty hn ky agent ne kis chez per kya kam kia kitni dfa agents call huy unki total calls kitni h or unki jitni bhi details hn wo hamy mil jati ha tracing or 
-obseervability ky sth
+---agents bnaliye or wo sahi kam bhi krrhy hn lekin hamy kese pta lgyga ky wo sai kaam krrhy hn ya ni krrhy kya kya kaam krrhy hn koi chez ghlt bhi krdi hogi ek agent 
+ne dusry agent ko task dia hoga  agent ne tool use kia or usy use krny se phly ky events to ham out of the box ek ek run ko debug or visualize krskty hn ky agent ne kis chez per kya 
+kam kia kitni dfa agents call huy unki total calls kitni h or unki jitni bhi details hn wo hamy mil jati ha tracing or obseervability ky sth
+
+
+-------------SDK-----------
+SDK stands for software development kit. Also known as a devkit, the SDK is a set of software-building tools for a specific platform, including the building blocks, debuggers and, often,
+a framework or group of code libraries such as a set of routines specific to an operating system (OS).
+
+--------------------------------The Agents SDK is a toolkit designed mainly for Python developers to easily build and manage AI agents.------------------------------------
+
+🔑 Key Features (Simplified):
+
+Python-First Design:
+The SDK is designed to integrate naturally with Python. Developers can quickly set up agents, define the tools they can use (even converting Python functions 
+into callable tools), and chain together workflows without needing a steep learning curve.
+Made to fit naturally into Python code.
+You can quickly create agents, assign them tools (even Python functions), and link tasks together with minimal effort.
+
+Built-in Agent Loop:(agent loop m kam krta rhta h jb tk desired task ya final output achieve na hojaye)(phly yh kam workflow per manually sb krty thy tools defined krna retrievel data yh 
+sb but ab yh agent sdk khud decide krta h bs usy task do or wo khud dekhega ky tool cl krna h ya handoffs krna h or agr desired output ni aya to yh loop dubara chlyga
+
+When you run an agent with the SDK, it automatically enters a loop where it:
+
+--------------The agent automatically runs a smart cycle:
+Sends prompts to the model.
+Uses tools if needed.
+Passes tasks between agents.
+Keeps going until a final answer is ready.
+
+Interoperability:
+Although built to work seamlessly with OpenAI’s own models and the new Responses API, the Agents SDK is flexible enough to work with any model provider that supports the Chat
+Completions API format.
+Works best with OpenAI models, but can also work with any AI model that supports the Chat Completions API (like other LLMs).
+
+Multi-Agent Workflow:
+It allows the creation of complex systems where, for example, one agent might perform research while another handles customer support tasks—each agent working in tandem to achieve 
+a common goal.
+Lets you build systems where multiple agents work together (e.g., one does research, another manages support), collaborating to reach a shared goal efficiently.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
