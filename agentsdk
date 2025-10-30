@@ -250,12 +250,67 @@ async def main():
 
     result = Runner.run_streamed(agent, input="Please tell me 5 jokes.")
     async for event in result.stream_events():
-        if event.type == "raw_response_event" and isinstance(event.data, ResponseTextDeltaEvent):
-            print(event.data.delta, end="", flush=True)
-
-
+        if event.type == "raw_response_event" and isinstance(event.data, ResponseTextDeltaEvent):-----------------(ResponseTextDeltaEvent: event data ky class ki type bhi hogi yh type h 
+data ki jo wo dega,raw_response_event:loop lgaya h jo us betahasha chizain arhi hn to hamne kaha raw response event jb hoga us wqt wo kam complete krke data return krta h)
+            print(event.data.delta, end="", flush=True)-----------(event.data.delta: yh text nikalyga jitna complete hua h
+ ( end=""----: by default print jb horha hota h to wo \n se next line per ajata h to hamne kehdia ky next line ni chaiye jo arha h usy dusry ky agay likhty jao space dal kr
 
 asyncio.run(main())
+
+
+
+---stream ky ilawa event bhi perform horhy hoty h kunke agent ko hamne task dia to wo bht sary kaam krrha hota ha
+------In Python, flush=True in the print() function forces the output to be written to the console immediately. Normally Python buffers output, which means it might delay displaying 
+what you printed until the buffer is full or a newline character is encountered. Using flush=True is particularly useful in scenarios like real-time logging or when printing streaming
+data, ensuring that every piece of output is displayed as soon as it's generated.
+
+For example, in your code:
+print(event.data.delta.end="", flush=True)
+
+end="": This means no newline character is appended at the end of the printed text.
+flush=True: This forces the output to be flushed to the console immediately, even without a newline
+
+------------------------FLUSH=TURE IN OUR CODE JO UPR GYA H------------------------
+🧠 Meaning of flush=True
+Normally, Python buffers printed text — meaning it stores it temporarily before actually showing it on the screen.
+So when you print inside a loop, the text might not appear immediately.
+✅ flush=True forces Python to immediately push (flush) the text from the buffer to the console or output stream.
+
+💬 In this context (streaming output)
+Here, the model sends chunks of text as it generates them (event.data.delta = partial text).
+To make the output appear live, like real-time typing, we use:
+flush=True
+
+That way, each small piece (token or word) appears instantly instead of waiting until the model finishes.
+
+⚙️ Example to visualize it
+Without flush:
+# Text appears all at once at the end
+print("H", end="")
+print("e", end="")
+print("l", end="")
+print("l", end="")
+print("o", end="")
+
+→ Output might show “Hello” only after the loop ends.
+With flush:
+# Text appears letter by letter
+print("H", end="", flush=True)
+print("e", end="", flush=True)
+print("l", end="", flush=True)
+print("l", end="", flush=True)
+print("o", end="", flush=True)
+
+→ Output shows H e l l o in real-time.
+
+🧾 Summary
+flush=True → forces the output to appear immediately.
+Used in streaming to show model text live as it’s generated.
+Without it, the console might delay or group text output.
+
+✅ In short:
+flush=True makes the text appear instantly during streaming — creating that smooth, “typing live” effect.
+
 
 
 
