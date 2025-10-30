@@ -259,7 +259,6 @@ asyncio.run(main())
 
 
 
----stream ky ilawa event bhi perform horhy hoty h kunke agent ko hamne task dia to wo bht sary kaam krrha hota ha
 ------In Python, flush=True in the print() function forces the output to be written to the console immediately. Normally Python buffers output, which means it might delay displaying 
 what you printed until the buffer is full or a newline character is encountered. Using flush=True is particularly useful in scenarios like real-time logging or when printing streaming
 data, ensuring that every piece of output is displayed as soon as it's generated.
@@ -314,6 +313,139 @@ flush=True makes the text appear instantly during streaming — creating that sm
 
 
 
+----------------------stream ky ilawa event bhi perform horhy hoty h kunke agent ko hamne task dia to wo bht sary kaam krrha hota ha tool ko cl bhi krta h uska output bhi lata h to bht
+sary event perform horhy hoty hn hamne upr waly code m to bs ek event nikala tha jis m wo text complete krke return krta ha to kon kon se event perform hoty hn agr unhy dekhna chahain to?
+same steps wohi hn bs thori changes hn jo yh nichy waly code m hui h-----------------------------------------------------------
+
+import asyncio
+import random
+
+from agents import Agent, ItemHelpers, Runner, function_tool
+
+
+@function_tool--------(yh tool decorator function use kia h function ko tool bnadeta h yh)
+def how_many_jokes() -> int:------------(yh normal function h jo random number generate krta ha)
+    return random.randint(1, 10)
+
+
+async def main():
+    agent = Agent(
+        name="Joker",
+        instructions="First call the `how_many_jokes` tool, then tell that many jokes.",
+        tools=[how_many_jokes],-------------(jo tool bnaya tha upr wo hamne yhn apne agent ko provide krdia)
+        model=model
+    )
+
+    result = Runner.run_streamed(
+        agent,
+        input="Hello",
+
+    )
+    print("=== Run starting ===")
+    async for event in result.stream_events():
+        # We'll ignore the raw responses event deltas
+        if event.type == "raw_response_event":
+            continue
+        elif event.type == "agent_updated_stream_event":
+            print(f"Agent updated: {event.new_agent.name}")
+            continue
+        elif event.type == "run_item_stream_event":
+            if event.item.type == "tool_call_item":
+                print("-- Tool was called")
+            elif event.item.type == "tool_call_output_item":
+                print(f"-- Tool output: {event.item.output}")
+            elif event.item.type == "message_output_item":
+                print(f"-- Message output:\n {ItemHelpers.text_message_output(event.item)}")
+            else:
+                pass  # Ignore other event types
+
+
+
+
+
+asyncio.run(main())
+
+print("=== Run complete ===")
+
+
+---------------------chainlit+stream runner in currsor--------------------------------------
+import chainlit as cl
+from agents import Agent, Runner,RunConfig, AsyncOpenAI, set_default_openai_client, set_tracing_disabled, set_default_openai_api,OpenAIChatCompletionsModel
+from agents import function_tool
+import os
+import asyncio
+from openai.types.responses import ResponseTextDeltaEvent
+from dotenv import load_dotenv , find_dotenv
+load_dotenv()
+from agents import enable_verbose_stdout_logging
+enable_verbose_stdout_logging()
+
+gemini_api_key = os.getenv('GEMINI_API_KEY')
+
+set_tracing_disabled(True)
+set_default_openai_api("chat_completions")
+
+provider = AsyncOpenAI(
+    api_key=gemini_api_key,
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+)
+
+set_default_openai_client(provider)
+
+model= OpenAIChatCompletionsModel(
+    model="gemini-2.0-flash",
+    openai_client=provider
+)
+
+config = RunConfig(
+    model = model,
+    model_provider = provider,
+    tracing_disabled= True
+)
+
+agent: Agent = Agent(
+    name="Panaversity manager",
+    instructions="You are a helpful assistant",
+    model="gemini-2.0-flash",
+  )
+
+result = Runner.run_sync(agent, "what is 22 * 13 + 32 - 8 ", run_config = config)
+
+print(result.final_output)
+
+
+
+
+
+@cl.on_chat_start
+async def handle_chat_start():
+    cl.user_session.set("history", [])
+
+    await cl.Message(content="Hello! I'm the Panadversity Support Agent.").send()
+
+@cl.on_message
+async def main(message: cl.Message):
+    history = cl.user_session.get("history")
+
+    msg = cl.Message(content="")
+    await msg.send()
+    # Standard Interface ({"role": "user", "content": "Hello!"}, {"role": "
+    history.append({"role": "user", "content": message.content})
+
+    result = Runner.run_streamed(
+        agent, 
+        input=history,
+        run_config = config,
+    )
+    async for event in result.stream_events():
+        if event.type == "raw_response_event" and isinstance(event.data, ResponseTextDeltaEvent):
+            token = event.data.delta
+            await msg.stream_token(token)
+
+    history.append({"role": "assistant", "content": result.final_output})
+    cl.user_session.set("history", history)
+   
+ 
 
 --------------------------------------------------------------------------------------------
 -------------------IMPORTANT:
@@ -418,3 +550,30 @@ Without the Runner, the agent just exists but can’t perform any actions.
 run_sync() → Runs the agent normally (blocking execution until done).
 run_async() → Runs the agent asynchronously using await (non-blocking).
 run_streamed() → Runs the agent in streaming mode, giving partial outputs live while generating.
+
+
+
+
+
+
+
+---------------------TOOL CALLING------------------------------
+from agents.tool import function_tool
+
+@function_tool("get_weather")
+def get_weather(location: str, unit: str = "C") -> str:
+    """
+    fetch the weather for a given location, returning a short description.
+
+    # Example Logic
+    return f"The weather in {location} is 22 degrees {unit}."
+    """
+
+
+@function_tool("puaic_student_finder")
+def student_finder(student_roll: int) -> str:
+    """
+    find the PUAIC student based on the roll number
+
+    Data = {1: "Basim", 2: "Sir Zia", 3: "Amaan"}
+return data.get(student_roll,"not found")
