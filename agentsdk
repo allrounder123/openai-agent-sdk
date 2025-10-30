@@ -1,0 +1,42 @@
+
+-----------agent jo h wo autonomous action lene wala ek model h--------------------------
+------async mtlb ham request bhjty hn wo process krta h or jb uska process khtm hoga wo response dedega-------------------------
+--------openai ky sdk ko use krty huy ham apny customize llm ko use krty hn jese openai m gemini flash use krty-----------------sdk agent or sary ky sary features sdk ky hongy lekin 
+backend per jo llm hoga wo free wala hoga gemini ka-------------demagh jo h wo gemini ka or jo decision making wagaira h wo openai sdk ka h
+-----------sync mtlb task jb perform horha h ussi wqt response do , or async mtlb 10 15 mnt bhi sochlo or jb response complete hojye tb response dedo
+
+
+
+
+
+-----------------------
+In the OpenAI Agents SDK (and similar frameworks), you’ll often see three levels of logic:
+Global level → Agent level → Run level
+
+Let’s break each down simply 👇
+🌍 Global Level
+The topmost layer — things that apply to the whole app or system, not just one agent or one conversation.
+It defines shared settings, global tools, and event handlers that affect everything.
+
+Think of it as:
+🧠 “What rules or tools should all agents or runs in my app have access to?”
+
+Examples:
+Registering a tool that every agent can use (like a database connector).
+Defining logging or error-handling behavior for the whole app.
+Setting up startup events, environment variables, or authentication.
+
+🧩 Agent Level
+Defines the behavior and configuration of one specific agent.
+Example: system prompt, tool access, goals, or memory setup.
+Agents can inherit or override global settings.
+
+Think of it as:
+🤖 “Who the agent is and what it can do.”
+
+⚙️ Run Level
+The execution layer — what happens in a single conversation or task run.
+This is where the agent actually processes input, calls tools, and produces outputs.
+
+Think of it as:
+🏃 “What happens right now while the agent is running.”
