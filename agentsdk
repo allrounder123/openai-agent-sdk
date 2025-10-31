@@ -558,6 +558,27 @@ run_streamed() → Runs the agent in streaming mode, giving partial outputs live
 
 
 ---------------------TOOL CALLING------------------------------
+In AI, a tool is an external helper function or service that an AI model can use to perform specific tasks it can’t do on its own — like checking the weather, running code, searching
+the web, or doing calculations.
+The process of tool calling means the AI automatically decides when and how to use these tools during a conversation.
+It’s like the AI saying:
+“I can’t do this myself, but I know a tool that can!”
+Then it calls the tool, gets the result, and uses it to respond naturally.
+
+🧭 Why Tools Are Important
+🕒 Fetch live data — e.g., current weather, stock prices, or news.
+⚙️ Perform actions — e.g., send an email, run Python code, access a database.
+✅ Improve accuracy and safety — by verifying answers using reliable sources.
+
+📝 Summary (in points)
+A tool is a helper function that performs one specific task.
+Tool calling is when the AI uses that helper automatically during chat.
+Tools extend what AI can do (fetch real data, act, or validate info).
+The AI uses tools just like a person uses a calculator — decides when to use it, gets a result, and explains it.
+Tools make AI more useful, interactive, and reliable.
+
+
+----------------------------------------simple tools code------------------------------------------
 from agents.tool import function_tool
 
 @function_tool("get_weather")
