@@ -579,6 +579,37 @@ Tools make AI more useful, interactive, and reliable.
 
 
 ----------------------------------------simple tools code------------------------------------------
+!pip install -Uq openai-agents
+import nest_asyncio
+nest_asyncio.apply()
+from agents import Agent, Runner,RunConfig, AsyncOpenAI, OpenAIChatCompletionsModel, set_tracing_disabled
+from agents.run import RunConfig
+from google.colab import userdata
+gemini_api_key = userdata.get("GEMINI_API_KEY")
+
+
+# Tracing disabled
+set_tracing_disabled(disabled=True)
+
+# 1. Which LLM Service?
+external_client: AsyncOpenAI = AsyncOpenAI(
+    api_key=gemini_api_key,
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+)
+
+# 2. Which LLM Model?
+llm_model: OpenAIChatCompletionsModel = OpenAIChatCompletionsModel(
+    model="gemini-2.5-flash",
+    openai_client=external_client
+)
+
+config = RunConfig(
+    model = llm_model,
+    model_provider = external_client,
+    tracing_disabled= True
+)
+
+#making tool here
 from agents.tool import function_tool
 
 @function_tool("get_weather")
@@ -587,14 +618,281 @@ def get_weather(location: str, unit: str = "C") -> str:
     fetch the weather for a given location, returning a short description.
 
     # Example Logic
-    return f"The weather in {location} is 22 degrees {unit}."
     """
+    return f"The weather in {location} is 22 degrees {unit}."
 
 
 @function_tool("puaic_student_finder")
 def student_finder(student_roll: int) -> str:
     """
-    find the PUAIC student based on the roll number
+    find the PUAIC student based on the roll number """
 
     Data = {1: "Basim", 2: "Sir Zia", 3: "Amaan"}
-return data.get(student_roll,"not found")
+    return data.get(student_roll,"not found")
+
+
+import asyncio
+from agents import Agent,Runner
+
+async def main():
+  agent = Agent(
+      name = "assistant",
+      instructions="you are help assistant",
+      tools = [get_weather,student_finder],
+      model = llm_model
+  )
+
+  result = await Runner.run(agent,"call get_weather tool and tell me weather of lahore")
+  print(result.final_output)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+
+
+
+----------opena agent sdk---------
+The Agents SDK is designed with two main goals in mind:
+
+Enough features to be worth using, but few enough primitives to make it quick to learn.(In simple terms:
+Primitives = the most basic tools, functions, or components you need to work with the SDK.
+Having few primitives means you don’t have to learn many things — just a few core ideas that can be combined or extended to build complex behavior.
+👉 Example: Instead of giving you 20 complicated functions, the SDK gives you 3 simple ones that can do everything — making it faster and easier to learn.)
+Simplicity with power – It includes just the right amount of features to be useful without being overwhelming. You can learn it quickly because it focuses on a few key, essential
+tools instead of too many complex ones.
+
+Flexibility – It works perfectly as soon as you install it (“out of the box”), but you also have full control to customize behaviors and logic as needed for your application.
+
+👉 In short:
+The Agents SDK is built to be easy to learn, powerful to use, and flexible to customize.
+
+
+------------------------------------------🧠 Main Features Explained
+
+Agent Loop
+The SDK automatically manages the process of calling tools, sending their results to the AI model, and repeating this cycle until the task is finished.
+✅ In short: It handles the full “think → act → reflect” loop for you.
+
+Python-first(python ki hi chizain istemal krty huy new chizain bnyngy jese ek decorator lgaya to graph bn gya is trh sb kch , kch bhi new ni sikhna parega)
+You can use normal Python syntax and features to control and connect agents.
+✅ In short: No need to learn new programming styles — it works naturally with Python.
+Orchestrate = to coordinate or arrange different parts to work together smoothly (like a conductor leading an orchestra).
+
+Handoffs
+Lets one agent delegate (pass) a task to another specialized agent.
+✅ In short: Agents can work together and share tasks.
+
+Guardrails
+These are safety checks or validations that run alongside your agent’s logic. If something looks wrong, it can stop the process early.
+✅ In short: Ensures inputs and outputs are valid and safe.
+
+Sessions
+Automatically keeps conversation history so your agent remembers past context without manual coding.
+✅ In short: Handles memory for you.
+
+Function Tools
+Instantly turn any Python function into a usable tool.
+The SDK automatically creates input/output schemas (data formats) and validates them with Pydantic (a Python library for data validation).
+✅ In short: Makes your Python functions ready for use by the agent with no extra effort.
+
+Tracing
+Provides visual tracking and debugging of agent workflows.
+You can also use OpenAI tools for evaluation, fine-tuning, and distillation (improving models).
+✅ In short: Lets you see what’s happening inside and improve performance.
+
+🪄 Overall Summary
+The Agents SDK gives developers powerful tools to build AI agents easily in Python.
+It manages loops, memory, safety, and collaboration automatically — while letting you monitor, debug, and extend behavior smoothly.
+
+👉 In one line:
+The SDK helps you build, control, and monitor AI agents effortlessly using simple Python code.
+
+
+
+----------------------------------
+---generic typehints deta h
+
+
+
+------------In Python, @dataclass is a decorator that automatically adds common methods to a class — like __init__(), __repr__(), and __eq__() — so you don’t have to write them manually.
+
+🧩 Meaning:
+A decorator (like @dataclass) modifies how a class or function behaves — it adds extra functionality.
+
+🧠 Why use @dataclass:
+It’s used to create data-holding classes (like records or structs) more easily.
+
+Without @dataclass 👇
+
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+
+With @dataclass 👇
+
+from dataclasses import dataclass
+
+@dataclass
+class Person:
+    name: str
+    age: int
+
+
+✅ Now Python automatically creates:
+__init__() – constructor
+__repr__() – readable string output
+__eq__() – equality check
+
+🪄 In short:
+@dataclass makes it faster and cleaner to define simple classes that store data — no need to write repetitive code.
+
+
+---------------------------------------DATACLASS AND PYDANTIC----------------------------
+Purpose
+dataclass is used to create simple data containers with less code.
+Pydantic is used to validate and parse data (especially from external sources like APIs or JSON).
+
+Type Checking
+dataclass does not enforce types at runtime — type hints are just for readability.
+Pydantic checks and enforces types at runtime, converting or rejecting invalid data.
+
+Validation
+dataclass has no built-in validation. You must write custom checks.
+Pydantic automatically validates inputs and raises errors if data is incorrect.
+
+Automatic Conversion
+dataclass won’t convert "25" (string) to 25 (int).
+Pydantic automatically converts compatible types.
+
+Error Handling
+dataclass won’t stop you from passing wrong types.
+Pydantic raises detailed validation errors.
+
+Performance
+dataclass is faster and lighter (no validation overhead).
+Pydantic is slightly slower because it performs runtime validation.
+
+Use Case
+Use dataclass for internal data storage or simple models.
+Use Pydantic for external data, user input, or API responses that need validation.
+
+👉 In short:
+dataclass = simple and lightweight.
+Pydantic = powerful and safe with validation.
+
+-------------data class built-in h or pydantic ki library import install krni parti h
+---dataclass m bhi methods bna skty hn  or class method or class variable bhi define krskty hn dataclass m
+
+
+----------An instance variable is a variable that belongs to a specific object (instance) of a class in Python.
+🧩 Explanation:
+Each time you create an object from a class, it gets its own copy of the instance variables.
+These variables are usually defined inside the __init__() method using self.
+
+-------------------------------------🧰 Example:---------------------------------
+class Car:
+    def __init__(self, brand, color):
+        self.brand = brand      # instance variable
+        self.color = color      # instance variable
+
+# creating two objects
+car1 = Car("Toyota", "Red")
+car2 = Car("Honda", "Blue")
+
+print(car1.brand)  # Toyota
+print(car2.brand)  # Honda
+
+
+Here:
+brand and color are instance variables.
+car1 and car2 each have their own separate values for these variables.
+
+🪄 In short:
+An instance variable stores data unique to each object created from a class.
+
+
+---------class method ko class ky sth call krskty hn
+--------instance method keliye class ka phly ham instance bnaty hn or instance bnany ky bd phr ham usy use krhy hoty hn
+
+
+------------------------------------------------------------------
+🧠 1. Instance Variable
+Belongs to a specific object (instance) of a class.
+Defined using self inside __init__().
+Each object has its own copy of these variables.
+
+✅ Example:
+
+class Car:
+    def __init__(self, brand):
+        self.brand = brand  # instance variable
+
+🏷️ 2. Class Variable
+Shared by all objects of the class.
+Defined outside any method, usually directly under the class.
+Changing it affects all instances (unless overridden).
+
+✅ Example:
+
+class Car:
+    wheels = 4  # class variable
+    def __init__(self, brand):
+        self.brand = brand  # instance variable
+
+⚙️ 3. Instance Method
+Works with instance variables.
+Needs access to the object (self).
+Used to define behavior for individual objects.
+
+✅ Example:
+
+class Car:
+    def start(self):  # instance method
+        print("Car started")
+
+🧩 4. Class Method
+Works with class variables, not instance variables.
+Defined using the @classmethod decorator.
+Takes cls (class reference) instead of self.
+
+✅ Example:
+
+class Car:
+    wheels = 4
+
+    @classmethod
+    def change_wheels(cls, new_count):
+        cls.wheels = new_count
+
+----------------------------------------
+🔹 Instance Variable
+Belongs to one specific object.
+Defined inside __init__() using self.
+Each object has its own copy.
+
+🔹 Class Variable
+Shared by all objects of the class.
+Defined outside any method (inside the class).
+Changing it affects all instances.
+
+🔹 Instance Method
+Works with instance variables.
+Takes self as the first parameter.
+Defines behavior for individual objects.
+
+🔹 Class Method
+Works with class variables.
+Takes cls as the first parameter.
+Defined using @classmethod.
+Affects the entire class, not just one object.
+
+
+👉 Simple Summary:
+Instance variable/method → specific to each object.
+Class variable/method → shared by all objects.
+
+
+
+-----------------------------------------------------------
