@@ -578,7 +578,7 @@ The AI uses tools just like a person uses a calculator — decides when to use i
 Tools make AI more useful, interactive, and reliable.
 
 
-----------------------------------------simple tools code------------------------------------------
+----------------------------------------simple tools code in google colab------------------------------------------
 !pip install -Uq openai-agents
 import nest_asyncio
 nest_asyncio.apply()
@@ -649,9 +649,97 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
 
+---------------------------------------------------------------------------------------------------
+--------------------------------------code of chainlit+function tool in curosr--------------------------------------------
+
+import chainlit as cl
+from agents import(Agent, Runner,RunConfig, AsyncOpenAI, set_default_openai_client, 
+set_tracing_disabled, set_default_openai_api,OpenAIChatCompletionsModel)
+from agents import function_tool
+import os
+from agents.tool import function_tool
+
+import asyncio
+from openai.types.responses import ResponseTextDeltaEvent
+from dotenv import load_dotenv , find_dotenv
+load_dotenv()
+from agents import enable_verbose_stdout_logging
+enable_verbose_stdout_logging()
+
+gemini_api_key = os.getenv('GEMINI_API_KEY')
+
+set_tracing_disabled(True)
+set_default_openai_api("chat_completions")
+
+provider = AsyncOpenAI(
+    api_key=gemini_api_key,
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+)
+
+set_default_openai_client(provider)
+
+model= OpenAIChatCompletionsModel(
+    model="gemini-2.0-flash",
+    openai_client=provider
+)
+
+config = RunConfig(
+    model = model,
+    model_provider = provider,
+    tracing_disabled= True
+)
+
+@function_tool("get_weather")
+def get_weather(location: str, unit: str = "C") -> str:
+    """
+    fetch the weather for a given location, returning a short description.
+
+    # Example Logic
+    """
+    return f"The weather in {location} is 22 degrees {unit}."
+
+agent: Agent = Agent(
+    name="Panaversity manager",
+    instructions="You are a helpful assistant",
+    model="gemini-2.0-flash",
+    tools = [get_weather],
+  )
+
+result = Runner.run_sync(agent, "what is 22 * 13 + 32 - 8 ", run_config = config)
+
+print(result.final_output)
 
 
-----------opena agent sdk---------
+
+@cl.on_chat_start
+async def handle_chat_start():
+    cl.user_session.set("history", [])
+
+    await cl.Message(content="Hello! I'm the your Support Agent.").send()
+
+@cl.on_message
+async def main(message: cl.Message):
+    history = cl.user_session.get("history")
+
+    msg = cl.Message(content="")
+    await msg.send()
+    # Standard Interface ({"role": "user", "content": "Hello!"}, {"role": "
+    history.append({"role": "user", "content": message.content})
+
+    result = Runner.run_streamed(
+        agent, 
+        input=history,
+        run_config = config,
+    )
+    async for event in result.stream_events():
+        if event.type == "raw_response_event" and isinstance(event.data, ResponseTextDeltaEvent):
+            token = event.data.delta
+            await msg.stream_token(token)
+
+    history.append({"role": "assistant", "content": result.final_output})
+    cl.user_session.set("history", history)
+
+----------openai agent sdk---------
 The Agents SDK is designed with two main goals in mind:
 
 Enough features to be worth using, but few enough primitives to make it quick to learn.(In simple terms:
@@ -817,6 +905,15 @@ An instance variable stores data unique to each object created from a class.
 --------instance method keliye class ka phly ham instance bnaty hn or instance bnany ky bd phr ham usy use krhy hoty hn
 
 
+
+
+
+---------------------------instance vs class
+ek h class level or ek h object(instance) level
+ab ham masjid jaty hn whn namaz shuru hony ka time sbke liye same h to masjid jo h wo class(class level per) h or us m hr bnda jo ha(object , instance) uske pas apni apni watch h us per
+kisi ka time ek mnt agay h kisi ka fix h to yh ha object level
+
+
 ------------------------------------------------------------------
 🧠 1. Instance Variable
 Belongs to a specific object (instance) of a class.
@@ -895,4 +992,111 @@ Class variable/method → shared by all objects.
 
 
 
------------------------------------------------------------
+----------------------------dataclass code run both in cursor or colab-------------------------------
+
+from dataclasses import dataclass
+from typing import TypeVar,ClassVar
+
+@dataclass         #decorator h
+class American:
+  name: str
+  age: int
+  weight: float
+  liked_food: str
+  national_language: ClassVar[str] = "english"      #[str] is called generics
+  national_food : ClassVar[str] = "Hamburger"
+  normal_body_temperatur: ClassVar[float] = 98.6
+
+  def speaks(self):         #instance funcction bn gya
+    return f"{self.name} is speaking {American.national_language}"
+
+  def eats(self):
+    return f"{self.name} is eating"
+
+  @staticmethod               #( yh class ka static method h to yh srf class ky zariye hi call hoskta h,yh instance(object) se belong ni krta)
+  def country_language():
+    return American.national_language
+
+    
+john = American(name="isha",age=27,weight=67.5)          #(hr object ka apna naam apna age weight or language hoga or wo do method hongy speaks or eats jo unka individual hoga yh
+ek object tha john asy or bhi bnaskty bob,alice or bhi bht sary unke pas bhi 4 variable or 2 methods individual hongy)
+print(john.speaks())
+print(john.eats())
+print(American.country_language())
+
+print(john.name)
+print(john.age)
+print(john.weight)
+print(john)
+print(American.national_language)
+
+
+
+---------------class ka object bnarhy hn to usy instancetiate krrhy hhoty hn usy callable ni bolengy
+
+
+---------------------------------public , protected and private variable-------------------------------------
+🔹 Protected Variables
+Named with a single underscore _variable.
+Means: “for internal use only” (not enforced, just a convention).
+Can still be accessed from outside the class if needed.
+
+✅ Example:
+
+from dataclasses import dataclass
+
+@dataclass
+class Car:
+    _speed: int  # protected variable
+
+car = Car(100)
+print(car._speed)  # allowed, but not recommended
+
+
+🔹 Private Variables
+Named with double underscores __variable.
+Python automatically name-mangles it (changes the name internally).
+Not directly accessible from outside the class.
+
+✅ Example:
+
+from dataclasses import dataclass
+
+@dataclass
+class Car:
+    __engine_number: str  # private variable
+
+car = Car("EN123")
+# print(car.__engine_number)  ❌ Error
+print(car._Car__engine_number)  # ✅ Works (name mangling)
+
+
+🔹 Public Variables in Dataclass
+Variables without underscores are public.
+They can be freely accessed and modified from anywhere.
+This is the default in Python (and in dataclasses).
+
+
+✅ Example:
+from dataclasses import dataclass
+
+@dataclass
+class Car:
+    brand: str      # public
+    model: str      # public
+
+car = Car("Toyota", "Corolla")
+print(car.brand)   # ✅ Accessible
+car.model = "Yaris"  # ✅ Can modify
+
+
+🪄 In short:
+brand → Public (default, fully accessible)
+_speed → Protected (for internal use)
+__engine_number → Private (hidden from outside)
+
+
+🪄 In short:
+_var → Protected (accessible but meant for internal use).
+__var → Private (hidden via name mangling).
+Works the same in dataclasses as in normal Python classes — the decorator doesn’t change this behavior.
