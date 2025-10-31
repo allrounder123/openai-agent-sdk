@@ -998,13 +998,13 @@ from dataclasses import dataclass
 from typing import TypeVar,ClassVar
 
 @dataclass         #decorator h
-class American:
+class American:                      #same as "class American(object):" yh (object) dalny ki zrort ni hoti kunke compiler khud dal deta h actually interpreter
   name: str
   age: int
   weight: float
   liked_food: str
   national_language: ClassVar[str] = "english"      #[str] is called generics
-  national_food : ClassVar[str] = "Hamburger"
+  national_food : ClassVar[str] = "Hamburger"           
   normal_body_temperatur: ClassVar[float] = 98.6
 
   def speaks(self):         #instance funcction bn gya
@@ -1100,3 +1100,438 @@ __engine_number → Private (hidden from outside)
 _var → Protected (accessible but meant for internal use).
 __var → Private (hidden via name mangling).
 Works the same in dataclasses as in normal Python classes — the decorator doesn’t change this behavior.
+
+
+
+---------------static variables static method m bhi available hoty hn or instance methods m bhi available hoty h
+---------class variable available hoty hn sary objects m or unka sary objects m ek hi value hoti h
+
+
+---------system prompt wo instruction jo ham llm ko pass krrhy hn ky yh tumhara persona h yh goal h yh type h
+----instruction ya to string hogi ya callable hogi ya none hogi or default m equals to none hogi
+1.string(str) hamne llm ko pas kia or llm ne isy instruction ky tor per lia or llm ne response krdia phr
+2.dusra instruction callable bhi hoskta h mtlb ham dynamically koi bhi chez agent ya llm ko pass krskta hu instructions ky tor per(koi bhi function hoskta ha jo kch kam krny ky bd
+dynamically system prompt hamy return krwata hoga string ky andr or wo pass hojyga llm ko)
+3.none mtlb koi bhi instruction pas ni krrhy none pas krrhy
+
+
+
+---------------------------str,callable,none-----------------------------------
+This means that the instruction (a variable or parameter) can accept three possible types of values:
+
+🔹 1. str (String)
+It can be a text instruction — a normal string.
+✅ Example:
+instruction = "Start the process"
+
+🔹 2. callable
+It can be a function or method that can be called/executed.
+✅ Example:
+
+def greet():
+    print("Hello!")
+
+instruction = greet  # callable
+instruction()        # runs the function
+
+
+Meaning: You can pass a function itself instead of text, so it can be executed later.
+
+🔹 3. None
+It means no instruction is given (empty or inactive).
+✅ Example:
+instruction = None
+
+🪄 In short:
+instruction can be:
+A string → simple message or text command.
+A callable → a function that can run.
+None → no instruction at all.
+
+
+
+---------------------------CALLABLE---------------------------
+--------------------🧸 Example 1 — Function
+
+def say_hello():
+    print("Hello!")
+
+say_hello()   # You called it! It says Hello!
+
+
+💡 The function is callable because you can call it with ().
+
+
+
+
+----------------------🚗 Example 2 — Class with a method
+class Car:
+    def start(self):
+        print("Vroom!")
+
+my_car = Car()
+my_car.start()  # You called the method — the car starts!
+
+
+💡 my_car.start is callable because you can use () to make it do something.
+
+
+
+---------------🧩 Example 3 — A callable object
+
+You can even make an object callable by giving it a special power called __call__.
+
+class Greeter:
+    def __call__(self):
+        print("Hi there!")
+
+g = Greeter()
+g()  # works like a function!
+
+
+💡 g is not a function — it’s an object — but you can still “call” it. That’s why it’s callable!
+
+
+
+-------------------------❌ Example 4 — Not callable
+toy = "Teddy bear"
+toy()  # ❌ Error! Strings can’t be called
+
+
+💡 You can’t “call” a string — it’s not callable.
+
+
+
+--------------------------------------------🪄 Check if something is callable
+print(callable(say_hello))  # True
+print(callable(toy))        # False
+
+------------🌟 In short:
+Callable = something you can call with ()
+Examples: functions, methods, or special objects.
+If you can’t “call” it, Python gives an error.
+
+
+----------🧁 Think of it like this:
+A callable is like a button you can press (with ()) to make something happen!
+
+
+-------------------------
+def greet():
+  return "hello"
+
+print(greet())
+dir(greet())      #dir jo ha wo greet() function ki puri directory dikha dega
+#dir(greet) → lists everything Python stores inside the function object, like its built-in properties.
+
+output:
+hello
+['__add__',
+ '__class__',
+ '__contains__',
+ '__delattr__',
+ '__dir__',
+ '__doc__',
+ '__eq__',
+ '__format__',
+ '__ge__',
+ '__getattribute__',
+ '__getitem__',
+ '__getnewargs__',
+ '__getstate__',
+ '__gt__',
+ '__hash__',
+ '__init__',
+ '__init_subclass__',
+ '__iter__',
+ '__le__',
+ '__len__',
+ '__lt__',
+ '__mod__',
+ '__mul__',
+ '__ne__',
+ '__new__',
+ '__reduce__',
+ '__reduce_ex__',
+ '__repr__',
+ '__rmod__',
+ '__rmul__',
+ '__setattr__',
+ '__sizeof__',
+ '__str__',
+ '__subclasshook__',
+ 'capitalize',
+ 'casefold',
+ 'center',
+ 'count',
+ 'encode',
+ 'endswith',
+ 'expandtabs',
+ 'find',
+ 'format',
+ 'format_map',
+ 'index',
+ 'isalnum',
+ 'isalpha',
+ 'isascii',
+ 'isdecimal',
+ 'isdigit',
+ 'isidentifier',
+ 'islower',
+ 'isnumeric',
+ 'isprintable',
+ 'isspace',
+ 'istitle',
+ 'isupper',
+ 'join',
+ 'ljust',
+ 'lower',
+ 'lstrip',
+ 'maketrans',
+ 'partition',
+ 'removeprefix',
+ 'removesuffix',
+ 'replace',
+ 'rfind',
+ 'rindex',
+ 'rjust',
+ 'rpartition',
+ 'rsplit',
+ 'rstrip',
+ 'split',
+ 'splitlines',
+ 'startswith',
+ 'strip',
+ 'swapcase',
+ 'title',
+ 'translate',
+ 'upper',
+ 'zfill']
+
+
+
+-----------------------------------callable vs non-callable object------------------------
+--------NON-CALLABLE OBJECT CODE----------------
+from dataclasses import dataclass
+
+@dataclass
+class Human:
+    # Attributes
+    name: str
+    age: int
+
+    # Method to greet
+    def greet(self):
+        return f"HI, I'm {self.name}"
+
+    # Another method
+    def works(self):
+        return "I am working"
+
+# Object instantiation (partially visible in the screenshot)
+obj1 = Human(name="John", age=22)
+
+print(obj1.name)         #OUTPUT: John
+print(obj1.age)          #OUTPUT: 22
+print(obj1.greet())      #OUTPUT:HI,I'm John
+print(obj1.works())      #OUTPUT:I am working
+obj1()                   #IT GIVES ERROR:---------------------------------------------------------------------------
+                        TypeError                                 Traceback (most recent call last)
+                        /tmp/ipython-input-1288370025.py in <cell line: 0>()
+                                ----> 1 obj1()
+                            TypeError: 'Human' object is not callable
+
+
+
+
+---------------------------CALLABLE OBJECT CODE----------------------------------
+from dataclasses import dataclass
+
+@dataclass
+class Human:
+    # Attributes
+    name: str
+    age: int
+
+    # Method to greet
+    def greet(self):
+        return f"HI, I'm {self.name}"
+
+    # Another method
+    def works(self):
+        return "I am working"
+
+    def __call__(self):          #yh magic method bhi kehty hn or dunder function bhi dunder means double underscore to isy jo hamara object h wo callable hojyga or output ajana
+      return "hello"
+      
+# Object instantiation (partially visible in the screenshot)
+obj1 = Human(name="John", age=22)
+
+print(obj1.name)         #OUTPUT: John
+print(obj1.age)          #OUTPUT: 22
+print(obj1.greet())      #OUTPUT:HI,I'm John
+print(obj1.works())      #OUTPUT:I am working
+obj1()                   OUTPUT: 'hello'
+
+
+
+----------------bydefault sary function dunder hoty hn callable hoty hn lekin jo instance hota h means object to wo callable ni hota usko callable bnana hamne upr dekha
+-----class m () ky andr self ni lgaty ya zrori ni baqi sb function m lgaty self () is m or self jo h wo class ka refrence h ky class ky andr ek method h to usy call krny keliye self
+dengy mtlb yh isi class ka h self h yh khud h 
+
+
+
+
+
+-------------------------------------------SELF UNDERSTANDING----------------------
+-----------------;;;;;;;;;;;;;;;;;;;QUESTION;;;;;;;;;;;;;;;;;;;;;;;;;---------------------
+@dataclass
+class Human:
+    # Attributes
+    name: str
+    age: int
+
+    # Method to greet
+    def greet(self):
+        return f"HI, I'm {self.name}"
+
+    # Another method
+    def works(self):
+        return "I am working"
+----( in this code in greet method we are passing self and in class Human we are not passing self why? and what does self means? what is refer?
+
+
+---------------------------------;;;;;;;;;;;;;;;;ANSWER;;;;;;;;;;;------------------
+🧠 Step 1: Understanding what a class really is
+
+A class is just a blueprint — it tells Python what data (attributes) and what actions (methods) an object will have.
+
+Example:
+
+@dataclass
+class Human:
+    name: str
+    age: int
+
+
+Here, we are only defining the structure.
+We’re saying: “Every Human will have a name and an age.”
+So we don’t need to pass self here — because this part just describes what a Human looks like, not what it does.
+
+🧩 Step 2: When we define a method inside the class
+Now look at:
+
+def greet(self):
+    return f"Hi, I'm {self.name}"
+
+Here we are defining an action — something a Human object can do.
+So, when you create an object:
+
+person = Human("Queen", 20)
+
+and then call:
+
+person.greet()
+
+
+Python secretly calls it like this:
+
+Human.greet(person)
+
+
+That means the object person (which is Human("Queen", 20)) is automatically passed to the function as the first argument — and that’s what self refers to.
+
+💡 Step 3: What self means
+
+👉 self simply means “this object”.
+It refers to the specific object that is calling the method.
+
+So when you write:
+
+return f"Hi, I'm {self.name}"
+
+
+self.name means — “get the name value that belongs to this particular Human object.”
+
+🪄 Step 4: Why not in the class header?
+Because the class header defines the blueprint (the design), not an instance (object).
+self only exists after you create an object from the class.
+
+-----------------💡 Summary:
+self means “this object” — it refers to the object that calls the method.
+You write self as the first parameter in methods inside a class.
+When you call a method like person.greet(), Python secretly does Human.greet(person).
+That’s why the object (person) is automatically passed as self.
+self lets you access object attributes (like self.name or self.age).
+In the class header, you don’t write self because you’re defining a blueprint, not a specific object.
+self is only used inside methods that work with individual objects.
+
+
+
+-------------QUESTION:what is diffrence between def __init__ or def __call__ and why we dont make def __init__ in dataclass and we make def __init__ it in normal class?----------
+--------------------------------------------------ANSWER--------------------------------------
+💡 1. __init__ vs __call__
+🧩 __init__:
+
+It’s the initializer (constructor) method of a class.
+It runs automatically when you create an object.
+Its job is to set up the object’s attributes.
+
+Example:
+
+class Human:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+
+Now:
+person = Human("Queen", 20)
+
+Here, Python automatically calls __init__(person, "Queen", 20).
+
+
+🪄 __call__:
+It makes an object itself callable like a function.
+If a class defines __call__, you can do object() as if it were a function.
+
+Example:
+
+class Greet:
+    def __call__(self):
+        return "Hello!"
+
+g = Greet()
+print(g())  # Notice the parentheses! → Calls __call__
+
+So __call__ lets an object behave like a function.
+
+💫 2. Why we don’t write __init__ in a dataclass
+When you use @dataclass, Python automatically creates the __init__ method for you!
+
+Example:
+
+from dataclasses import dataclass
+
+@dataclass
+class Human:
+    name: str
+    age: int
+
+
+is the same as writing:
+
+class Human:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+
+So, dataclasses save you from boilerplate code — you don’t need to manually write __init__, __repr__, or __eq__ unless you want to customize them.
+
+🧠 Summary in Points
+__init__ → sets up object attributes when object is created.
+__call__ → allows an object to be called like a function.
+Dataclasses automatically generate __init__ for you.
+Normal classes need you to manually define __init__.
+You can still define your own __init__ in a dataclass if you need custom setup.
