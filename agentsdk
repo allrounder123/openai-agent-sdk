@@ -1535,3 +1535,175 @@ __call__ → allows an object to be called like a function.
 Dataclasses automatically generate __init__ for you.
 Normal classes need you to manually define __init__.
 You can still define your own __init__ in a dataclass if you need custom setup.
+
+
+
+
+
+--------------------QUESTION:WHEN me make dataclass so and make class then we make object of it so whats basically the scenario that connect it all together how object is making
+here with dataclass-------------------------------------
+---------------------------------------------------------------------ANSWER-----------------------------------------
+🌸 1. Normal class — what happens when you make an object
+When you create a normal class, you must define your own __init__ (constructor):
+
+class Human:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+
+Now when you write:
+
+person = Human("Queen", 20)
+
+
+Python does this internally:
+Creates empty space in memory for person (a Human object).
+Calls __init__(person, "Queen", 20).
+Fills in the data → person.name = "Queen" and person.age = 20.
+
+💫 2. Dataclass — what changes
+When you use @dataclass, Python automatically creates that __init__ method for you.
+
+from dataclasses import dataclass
+
+@dataclass
+class Human:
+    name: str
+    age: int
+
+
+You don’t see it, but Python secretly generates this behind the scenes:
+
+def __init__(self, name: str, age: int):
+    self.name = name
+    self.age = age
+
+
+So when you write:
+
+person = Human("Queen", 20)
+
+
+The same exact process happens:
+Memory is allocated for person.
+The auto-generated __init__ runs.
+It stores name and age inside that object.
+
+🧩 3. So what’s connecting it all together?
+Here’s the chain of connection in simple steps:
+@dataclass tells Python → “Please create extra magic methods for this class.”
+One of those methods is __init__.
+When you call Human("Queen", 20), Python automatically calls that generated __init__.
+That __init__ puts your values into the object (self.name, self.age).
+You now have a fully formed object (person) with data inside it.
+
+💡 4. In short:
+@dataclass = a decorator that auto-creates code (like __init__, __repr__, __eq__).
+When you create an object, the auto-generated __init__ runs behind the scenes.
+So the object creation flow stays exactly the same, only with less code to write.
+
+
+
+---------------------------------QUESTION : __new__ vs __init__ ------------------------------------------------------
+---------------------------------------ANSWER------------------------------------------
+💡 Difference between __new__ and __init__ in Python
+🧩 1. __new__ → creates the object
+🪄 2. __init__ → initializes the object
+
+They both work together, but do different jobs.
+
+🧱 Step-by-step example
+When you write:
+
+person = Human("Queen", 20)
+
+Python does this under the hood:
+
+Calls Human.__new__(Human) → this actually creates the empty object in memory.
+
+Then automatically calls Human.__init__(person, "Queen", 20) → this fills in the data (sets attributes).
+
+So:
+__new__ = “make me an empty box”
+__init__ = “fill that box with stuff”
+
+🧠 Example
+class Human:
+    def __new__(cls):
+        print("Step 1: Creating object (memory allocated)")
+        instance = super().__new__(cls)
+        return instance
+
+    def __init__(self):
+        print("Step 2: Initializing object (attributes set)")
+
+
+Output:
+
+Step 1: Creating object (memory allocated)
+Step 2: Initializing object (attributes set)
+
+🪄 Simple Analogy
+Imagine you’re baking a cake 🍰
+__new__ → builds the empty cake base (the sponge).
+__init__ → decorates it (adds cream, frosting, etc).
+You can’t decorate before you bake — same logic!
+
+💬 Why we rarely use __new__
+You almost never need to define __new__ in normal classes or dataclasses.
+It’s mainly used when creating immutable objects (like tuples, strings) or customizing metaclass behavior.
+In regular classes, we only define __init__.
+
+🌸 Summary in Points
+__new__ → creates the object (allocates memory).
+__init__ → initializes the object (sets its attributes).
+Python always calls __new__ first, then __init__.
+You usually define only __init__; __new__ is for advanced use.
+In dataclasses, __init__ is auto-generated; __new__ is still used internally by Python.
+
+
+
+-----------run_sync method static h runner ki class m 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
