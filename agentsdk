@@ -1919,7 +1919,28 @@ print(calc(5, 12))   # Outputs: '17'
 
 
 
+----------------------------------GENERIC CALLABLES-----------------------------
+Generic Callables
+Generics let you parameterize a callable’s input or output types using TypeVar. For example:
 
+
+from typing import Callable, TypeVar
+
+T = TypeVar("T")
+U = TypeVar("U")
+
+# A generic callable that transforms type T into type U
+Transformer = Callable[[T], U]
+
+def apply_transformer(value: T, transformer: Callable[[T], U]) -> U:
+    return transformer(value)
+
+# Example 1: Transform an integer into a descriptive string.
+def int_to_str(n: int) -> str:
+    return f"The number is {n}!"
+
+result1 = apply_transformer(42, int_to_str)
+print(result1)  # Outputs: 'The number is 42!'
 
 
 
