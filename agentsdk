@@ -1803,18 +1803,119 @@ PersonBad(name='Bob', age=25, email=None, tags=[])
 
 
 
+-------------------------------------------------------------------CALLABLE-------------------------------------------------------------------------
+In Python, a callable is anything that can be “called” using (...). This most commonly refers to functions (e.g., def foo(): ...), but classes (via __call__), lambdas,
+functools.partial objects, and so on can also be callables.
+---CLASS ka object do chizon per mushtamil hota h ek method or dusry attributes lekin ham object ko bhi callable bnaskty hn __call__ magic function ya dunder function kehty hn isy
+iske through ham kisi bhi object ko callable bna skty hn object()(object ky agay () lga kr) krke uska custom function bna kr cl krskty hn.
 
 
 
 
 
+------------------------- Basic Callable Type Hints
+To specify that a variable, parameter, or attribute is a function or callable, Python provides the Callable type hint. The typical usage is:
+----------------------code:
+
+from typing import Callable
+
+# A callable that takes two integers and returns a string
+MyFuncType = Callable[[int, int], str]
+print(MyFuncType)
+     
+output: typing.Callable[[int, int], str]
+
+
+---------------------------------------------------------------------------
+-------------------------------simple code---------------------------
+from dataclasses import dataclass
+from typing import Callable
+
+@dataclass
+class Calculator:
+    operation: Callable[[int, int], str]
+
+    def calculate(self, a: int, b: int) -> str:
+        return self.operation(a, b)
+
+def add_and_stringify(x: int, y: int) -> str:
+    return str(x + y)
+
+calc = Calculator(operation=add_and_stringify)
+print(calc.calculate(5, 7))  # Outputs: '12'
+
+
+--------------code explain--------------------------------
+
+# Usage
+from dataclasses import dataclass
+from typing import Callable            #typing → A module that provides type hints for clarity.,Callable → A type hint that represents a function (something that can be “called”).
+
+@dataclass
+class Calculator:          #class bnai calculator
+    operation: Callable[[int, int], str]          #This defines a class attribute called operation.It uses a type hint to say: operation must be a function that:Takes two integers (int, int)Returns a string (str)    
+#or yh class ka input h jo callable h
+
+    def calculate(self, a: int, b: int) -> str:
+        return self.operation(a, b)        #calculate is a method of the Calculator class.It:Takes two integers, a and b.Calls the stored function (self.operation) with those two numbers.
+#Returns whatever that function returns (a string).So:When you call calc.calculate(5, 7), it actually runs self.operation(5, 7) → which runs the function you passed in (add_and_stringify).
+
+def add_and_stringify(x: int, y: int) -> str:                   #This is a normal function that:Takes two integers, x and y.Adds them: x + y.Converts the result to a string: str(x + y).Returns that string.
+#Example:add_and_stringify(5, 7) → '12'
+    return str(x + y)
+
+calc = Calculator(operation=add_and_stringify)     #calculator class ko operation se initialize kia or phr operation m function pass krdia #Creates an object (calc) of the Calculator class.
+#The operation parameter is set to our function add_and_stringify.So now:calc.operation == add_and_stringify
+print(calc.calculate(5, 7))  # Outputs: '12'
+#print line:Calls the calculate method.Internally it runs:self.operation(5, 7).which means:add_and_stringify(5, 7).That returns '12', and print displays it.
+
+
+
+-----------------------------------another code with slight change----------------
+# 1️⃣ Usage
+from dataclasses import dataclass
+from typing import Callable
+
+# 2️⃣ Define a data class
+@dataclass
+class Calculator:
+    operation: Callable[[int, int], str]
+
+    def __call__(self, a: int, b: int) -> str:       
+        return self.operation(a, b)
+
+# 3️⃣ Define the function to pass in
+def add_and_stringify(x: int, y: int) -> str:
+    return str(x + y)
+
+# 4️⃣ Create an object and call it
+calc = Calculator(operation=add_and_stringify)
+print(calc(5, 12))   # Outputs: '17'
 
 
 
 
+-----------------------code explanation---------------------
+from dataclasses import dataclass
+from typing import Callable
 
+# 2️⃣ Define a data class
+@dataclass
+class Calculator:
+    operation: Callable[[int, int], str]
 
+    def __call__(self, a: int, b: int) -> str:                   #__call__ is a special built-in method in Python that makes an object callable like a function.So when you write:calc(5, 12)
+#Python automatically calls:calc.__call__(5, 12).That’s why there’s no calculate() method here — the class itself acts like a function!.Inside __call__, it simply executes:self.operation(a, b)— which runs the function stored in operation.
+        return self.operation(a, b)
 
+# 3️⃣ Define the function to pass in
+def add_and_stringify(x: int, y: int) -> str:
+    return str(x + y)
+
+# 4️⃣ Create an object and call it
+calc = Calculator(operation=add_and_stringify)       #Creates an object calc with the function add_and_stringify stored in it.When we call calc(5, 12):Python triggers the __call__ method automatically.
+#That runs self.operation(5, 12).Which means → add_and_stringify(5, 12) → '17'.
+print(calc(5, 12))   # Outputs: '17'
 
 
 
