@@ -1944,6 +1944,20 @@ print(result1)  # Outputs: 'The number is 42!'
 
 
 
+------------------------------------------
+
+# Example without Generics
+def first_element(items):
+    return items[0]
+
+nums = [1, 2, 3]
+strings = ['a', 'b', 'c']
+
+print(first_element(nums))     #output: 1
+print(first_element(strings))  #output: 'a'
+
+# Issue: No type checking. We can't restrict or inform about expected data types explicitly.
+
 
 
 
