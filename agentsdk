@@ -1947,8 +1947,10 @@ print(result1)  # Outputs: 'The number is 42!'
 ------------------------------------------
 
 # Example without Generics
+
 def first_element(items):
-    return items[0]
+    return items[0]     #yhn items[0] ki jagah 'hello' likh dengy tb do dfa hello print hojana jo ky ghlt h but yhn error ni ayga kunke type jo h function ki wo any h to iske liye generic
+#use krty takay pta lg sky ky kya ghlti h
 
 nums = [1, 2, 3]
 strings = ['a', 'b', 'c']
@@ -1962,8 +1964,70 @@ print(first_element(strings))  #output: 'a'
 
 
 
+--------------------------------
+#example with generics
+
+from typing import TypeVar, List
+
+# Type variable for generic typing
+T = TypeVar('T')
+
+def generic_first_element(items: List[T]) -> T:     #items jo h us m list h or list ki type generic h T mtlb jo input m jarha h wohi output T ay kch or na ay
+    return items[0]                           #agr ham yhn return items[0] ki jagah return 'hello' likh kr hello return krwayn to yh yhin error dedega ky output to T generic h list ki to output usi m se ho jo 
+#input dia ha run time per output to do dfa hello dedega but hello ky word ky nichy red line arhi hogi agr generic na ho to error ni ayga hello do dfa print hojana kunke do dfa print ki statement
+#arhi h 
+
+nums = [1, 2, 3]
+strings = ['a', 'b', 'c']
+
+num_result = generic_first_element(nums)        # type inferred as int       #ab yhn hamne generic_first_element m nums dedia h jo integer ki list h to int hi return hoga
+string_result = generic_first_element(strings)  # type inferred as str        #ab yhn hamne generic_first_element m strings dedia h jo strings ki list h to strings hi return hoga
+
+print(num_result)    # 1
+print(string_result) # 'a'
 
 
+-------------------------------------GENERIC IMPORTANCE----------------------
+Generics in Python are used to make code type-safe, clear, and maintainable, especially in large projects.
+
+🔹 Static Type Checking:
+Without generics, Python won’t warn you if you pass a wrong data type (e.g., a list of integers instead of strings). Generics like List[str] or List[int] let tools such as mypy 
+catch such errors before runtime, preventing hidden bugs.
+
+🔹 Code Clarity:
+Using generics clearly communicates what kind of data a function expects, e.g., List[T] means all items are of one consistent type. This improves readability and avoids confusion.
+
+🔹 Better Tool Support:
+IDEs use generic type hints to offer smarter autocompletion and error suggestions, saving time and reducing mistakes.
+
+🔹 Future-Proofing:
+In complex systems, especially with nested or AI-related data, generics help ensure data consistency as code grows.
+
+🔹 Avoiding Logic Errors:
+They prevent subtle type-related bugs early, improving reliability and maintainability.
+
+✅ Summary:
+Generics don’t change how Python runs your code—they make it safer, clearer, and easier to manage as projects scale.
+
+
+------------------------------------------------------------------------------------------------
+Generics let you create functions, methods, or classes that can work with multiple types while preserving type relationships.
+Generics:
+Better communicate the intent of your code.
+Allow static type checking to verify correctness.
+In Python, this is done using TypeVar.
+
+🔹 Using TypeVar
+First, import TypeVar and define a generic type variable T:
+
+
+from typing import TypeVar
+
+T = TypeVar("T")  # T inside variable represents a generic type and the T is a generic variable 
+
+
+T is a placeholder that can be replaced with any type when the function is called.
+The actual type is inferred at runtime.
 
 
 
