@@ -2029,11 +2029,46 @@ First, import TypeVar and define a generic type variable T:
 
 from typing import TypeVar
 
+#analogy-> think of T as fill in the blank
+#type variable for generic typing
+#code acha hoga ky ek hi variable h jo generic hoga jo sb kch handle krega hr trh ka datatype handle krrha hoga or duplication bhi bach gai variable ki bhi datatype ki bhi or code duplication bhi bach gai
+#jb runtime per decide hona ho ky kya data ana h tb ham generic datatype bnayngy or use krengy
+#jb 100% hamy pta h ky hamara input output yhi ana h to phr ham apna restrict datatype lga skty hn ky string hi ho but jb hamy ni pta or datatype change bhi hoskti h user per depend krrha
+#ky wo runtime per kya data deskta it could be int,string or any other tb ham generic datatype use krengy
+#generic refers to general purpose thing ( in easy words)
 T = TypeVar("T")  # T inside variable represents a generic type and the T is a generic variable 
 
 
 T is a placeholder that can be replaced with any type when the function is called.
 The actual type is inferred at runtime.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
