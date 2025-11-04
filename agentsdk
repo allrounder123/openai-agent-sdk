@@ -1667,8 +1667,6 @@ In dataclasses, __init__ is auto-generated; __new__ is still used internally by 
 -----------run_sync method static h runner ki class m 
 
 
-
-
 ---------------------RSI----------------------
 In AI, RSI usually stands for Recursive Self-Improvement.
 
@@ -1820,7 +1818,7 @@ To specify that a variable, parameter, or attribute is a function or callable, P
 from typing import Callable
 
 # A callable that takes two integers and returns a string
-MyFuncType = Callable[[int, int], str]
+MyFuncType = Callable[[int, int], str]            (yhn do input h input depends on our parameters and output will be always one)
 print(MyFuncType)
      
 output: typing.Callable[[int, int], str]
