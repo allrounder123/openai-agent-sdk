@@ -1971,7 +1971,7 @@ from typing import TypeVar, List
 T = TypeVar('T')
 
 def generic_first_element(items: List[T]) -> T:     #items jo h us m list h or list ki type generic h T mtlb jo input m jarha h wohi output T ay kch or na ay
-    return items[0]                           #agr ham yhn return items[0] ki jagah return 'hello' likh kr hello return krwayn to yh yhin error dedega ky output to T generic h list ki to output usi m se ho jo 
+    return items[0]    #agr ham yhn return items[0] ki jagah return 'hello' likh kr hello return krwayn to yh yhin error dedega ky output to T generic h list ki to output usi m se ho jo 
 #input dia ha run time per output to do dfa hello dedega but hello ky word ky nichy red line arhi hogi agr generic na ho to error ni ayga hello do dfa print hojana kunke do dfa print ki statement
 #arhi h 
 
@@ -1983,6 +1983,14 @@ string_result = generic_first_element(strings)  # type inferred as str        #a
 
 print(num_result)    # 1
 print(string_result) # 'a'
+
+
+
+-------mypy is static type checker 
+-----pydantic runtime per error dedega or chlyga hi ni agr type ghlt hui lekin agr normal code h to hello print hojana or agr generic h to wo run hokr print to hoga but hello ky nichy
+red line dega
+
+
 
 
 -------------------------------------GENERIC IMPORTANCE----------------------
