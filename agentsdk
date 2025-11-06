@@ -1946,7 +1946,10 @@ print(result1)  # Outputs: 'The number is 42!'
 
 # Example without Generics
 
-def first_element(items):
+
+from typing import Any
+def first_element(items: list[Any])->Any:    #ab yhn any hamne dedia ky kch bhi dal skty ho to yhn type checking ni horhi ab any ki jagah agr ham any na likhain to str dalain int dalain
+#ab hamy kya pta ky kitny input aaskty hn hamne yh code alg alg agents ko dia wo ab konsi type chahty hn wo konsi dalain hamy kya pta 
     return items[0]     #yhn items[0] ki jagah 'hello' likh dengy tb do dfa hello print hojana jo ky ghlt h but yhn error ni ayga kunke type jo h function ki wo any h to iske liye generic
 #use krty takay pta lg sky ky kya ghlti h
 
